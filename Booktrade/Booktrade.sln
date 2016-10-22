@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booktrade", "Booktrade\Booktrade.csproj", "{FF4E1656-14E5-4E36-AB81-77EBCDE876C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booktrade.Tests", "Booktrade.Tests\Booktrade.Tests.csproj", "{4FC4DE00-3ABA-4A1A-8FDA-92507F9A9455}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF4E1656-14E5-4E36-AB81-77EBCDE876C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF4E1656-14E5-4E36-AB81-77EBCDE876C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF4E1656-14E5-4E36-AB81-77EBCDE876C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF4E1656-14E5-4E36-AB81-77EBCDE876C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC4DE00-3ABA-4A1A-8FDA-92507F9A9455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC4DE00-3ABA-4A1A-8FDA-92507F9A9455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC4DE00-3ABA-4A1A-8FDA-92507F9A9455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC4DE00-3ABA-4A1A-8FDA-92507F9A9455}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
