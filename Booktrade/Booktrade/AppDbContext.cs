@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 
 namespace Booktrade
 {
@@ -11,6 +12,7 @@ namespace Booktrade
         public AppDbContext()
             : base("DefaultConnection")
         {
+            Database.SetInitializer(new MySqlInitializer());
         }
     }
 }

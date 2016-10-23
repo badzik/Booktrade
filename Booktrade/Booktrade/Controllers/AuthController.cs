@@ -1,8 +1,11 @@
 ﻿using Booktrade.ViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -11,6 +14,27 @@ namespace Booktrade.Controllers
     [AllowAnonymous]
     public class AuthController : Controller
     {
+        private readonly UserManager<AppUser> userManager;
+
+        public AuthController()
+            : this(Startup.UserManagerFactory.Invoke())
+        {
+        }
+
+        public AuthController(UserManager<AppUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && userManager != null)
+            {
+                userManager.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
         [HttpGet]
         public ActionResult LogIn(string returnUrl)
         {
@@ -23,33 +47,63 @@ namespace Booktrade.Controllers
         }
 
         [HttpPost]
-        public ActionResult LogIn(LogInModel model)
+        public async Task<ActionResult> LogIn(LogInModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
-            // Don't do this in production!
-            if (model.Email == "admin@admin.com" && model.Password == "password")
+            var user = await userManager.FindAsync(model.Email, model.Password);
+
+            if (user != null)
             {
-                var identity = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, "Ben"),
-                new Claim(ClaimTypes.Email, "a@b.com"),
-                new Claim(ClaimTypes.Country, "England")
-            },
-                    "ApplicationCookie");
+                var identity = await userManager.CreateIdentityAsync(
+                    user, DefaultAuthenticationTypes.ApplicationCookie);
 
-                var ctx = Request.GetOwinContext();
-                var authManager = ctx.Authentication;
-
-                authManager.SignIn(identity);
+                GetAuthenticationManager().SignIn(identity);
 
                 return Redirect(GetRedirectUrl(model.ReturnUrl));
             }
 
             // user authN failed
             ModelState.AddModelError("", "Invalid email or password");
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Register(RegisterModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = new AppUser
+            {
+                UserName = model.Email,
+                Country = model.Country
+            };
+
+            var result = await userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                await SignIn(user);
+                return RedirectToAction("index", "home");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+
             return View();
         }
 
@@ -70,6 +124,19 @@ namespace Booktrade.Controllers
 
             authManager.SignOut("ApplicationCookie");
             return RedirectToAction("index", "home");
+        }
+
+        private IAuthenticationManager GetAuthenticationManager()
+        {
+            var ctx = Request.GetOwinContext();
+            return ctx.Authentication;
+        }
+
+        private async Task SignIn(AppUser user)
+        {
+            var identity = await userManager.CreateIdentityAsync(
+                user, DefaultAuthenticationTypes.ApplicationCookie);
+            GetAuthenticationManager().SignIn(identity);
         }
     }
 }
