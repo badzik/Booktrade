@@ -19,8 +19,8 @@ namespace Booktrade
             identity.AddClaim(new Claim(ClaimTypes.StreetAddress, user.Address));
             identity.AddClaim(new Claim(ClaimTypes.PostalCode, user.PostalCode));
             identity.AddClaim(new Claim(ClaimTypes.StateOrProvince, user.Province));
-            //identity.AddClaim(new Claim(ClaimTypes.StreetAddress, user.City));
-            //identity.AddClaim(new Claim(ClaimTypes.StreetAddress, user.BankNumber));
+            identity.AddClaim(new Claim("City", user.City));
+            identity.AddClaim(new Claim("BankNumber", user.BankNumber));
             identity.AddClaim(new Claim("MyName", user.Name));
             identity.AddClaim(new Claim(ClaimTypes.Surname, user.Surname));
             return identity;

@@ -12,6 +12,8 @@ namespace Booktrade.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
+            var context = new ApplicationDbContext();
+            var allusers = userManager.Users.ToList();
             return View();
         }
     }

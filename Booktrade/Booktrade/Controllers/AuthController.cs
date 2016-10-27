@@ -91,9 +91,11 @@ namespace Booktrade.Controllers
                 Address = model.Address,
                 Email = model.Email,
                 Name = model.Name,
-                Surname=model.Surname,
-                Province=model.Province,
-                PostalCode=model.PostalCode
+                Surname = model.Surname,
+                Province = model.Province,
+                PostalCode = model.PostalCode,
+                BankNumber = model.BankNumber,
+                City = model.City
                 
             };
 

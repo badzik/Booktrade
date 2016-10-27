@@ -18,18 +18,33 @@ namespace Booktrade.ViewModels
         public string Password { get; set; }
 
         [Required]
+        [Display(Name = "Imię")]
         public string Name { get; set; }
 
         [Required]
+        [Display(Name = "Nazwisko")]
         public string Surname { get; set; }
 
         [Required]
+        [Display(Name = "Adres")]
         public string Address { get; set; }
 
         [Required]
+        [Display(Name = "Kod pocztowy")]
+        public string PostalCode { get; set; }
+
+        [Required]
+        [Display(Name = "Miasto")]
+        public string City { get; set; }
+
+        [Required]
+        [Display(Name = "Województwo")]
         public string Province { get; set; }
 
         [Required]
-        public string PostalCode { get; set; }
+        [Display(Name = "Nr konta bankowego")]
+        public string BankNumber { get; set; }
+
+
     }
 }
