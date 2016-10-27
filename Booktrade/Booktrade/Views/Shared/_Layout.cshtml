@@ -22,8 +22,17 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav"></ul>
             </div>
+            @{
+                if (User.Identity.IsAuthenticated)
+                {
+                    <a href="@Url.Action("logout", "auth")">Log Out</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("login","auth")">Log In</a>
+                }
+            }         
         </div>
-        <a href="@Url.Action("logout", "auth")">Log Out</a>
     </div>
 
     <div class="container body-content">

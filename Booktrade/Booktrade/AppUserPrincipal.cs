@@ -15,7 +15,7 @@ namespace Booktrade
         {
         }
 
-        public string Name
+        public string Username
         {
             get
             {
@@ -23,11 +23,43 @@ namespace Booktrade
             }
         }
 
-        public string Country
+        public string Name
         {
             get
             {
-                return this.FindFirst(ClaimTypes.Country).Value;
+                return this.FindFirst("MyName").Value;
+            }
+        }
+
+        public string Surname
+        {
+            get
+            {
+                return this.FindFirst(ClaimTypes.Surname).Value;
+            }
+        }
+
+        public string Address
+        {
+            get
+            {
+                return this.FindFirst(ClaimTypes.StreetAddress).Value;
+            }
+        }
+
+        public string PostalCode
+        {
+            get
+            {
+                return this.FindFirst(ClaimTypes.PostalCode).Value;
+            }
+        }
+
+        public string Province
+        {
+            get
+            {
+                return this.FindFirst(ClaimTypes.StateOrProvince).Value;
             }
         }
     }

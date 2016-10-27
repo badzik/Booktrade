@@ -13,10 +13,23 @@ namespace Booktrade.ViewModels
         public string Email { get; set; }
 
         [Required]
+        [Display(Name="Hasło")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Required]
-        public string Country { get; set; }
+        public string Name { get; set; }
+
+        [Required]
+        public string Surname { get; set; }
+
+        [Required]
+        public string Address { get; set; }
+
+        [Required]
+        public string Province { get; set; }
+
+        [Required]
+        public string PostalCode { get; set; }
     }
 }

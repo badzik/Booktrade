@@ -88,7 +88,13 @@ namespace Booktrade.Controllers
             var user = new AppUser
             {
                 UserName = model.Email,
-                Country = model.Country
+                Address = model.Address,
+                Email = model.Email,
+                Name = model.Name,
+                Surname=model.Surname,
+                Province=model.Province,
+                PostalCode=model.PostalCode
+                
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
