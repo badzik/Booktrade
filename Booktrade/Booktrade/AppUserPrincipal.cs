@@ -51,7 +51,7 @@ namespace Booktrade
         {
             get
             {
-                return this.FindFirst("City").Value;
+                return this.FindFirst(ClaimTypes.PostalCode).Value;
             }
         }
 
@@ -66,14 +66,14 @@ namespace Booktrade
         {
             get
             {
-                return this.FindFirst(ClaimTypes.Locality).Value;
+                return this.FindFirst("City").Value;
             }
         }
         public string BankNumber
         {
             get
             {
-                return this.FindFirst("BankNumber").Value;
+                return this.FindFirst("BankNusmber").Value;
             }
         }
     }
