@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Booktrade.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,7 @@ namespace Booktrade
         public string City { get; set; }
         public string Province { get; set; }
         public string BankNumber { get; set; }
+
+        public virtual ICollection<Book> Books { get; set; }
     }
 }
