@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -17,6 +18,9 @@ namespace Booktrade
         public string Province { get; set; }
         public string BankNumber { get; set; }
 
-        public virtual ICollection<Book> Books { get; set; }
+        [InverseProperty("Seller")]
+        public virtual ICollection<Book> SellingBooks { get; set; }
+        [InverseProperty("Buyer")]
+        public virtual ICollection<Book> BuyingBooks { get; set; }
     }
 }

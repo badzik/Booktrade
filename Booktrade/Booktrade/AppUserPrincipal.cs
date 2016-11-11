@@ -73,7 +73,7 @@ namespace Booktrade
         {
             get
             {
-                return this.FindFirst("BankNusmber").Value;
+                return this.FindFirst("BankNumber").Value;
             }
         }
     }
