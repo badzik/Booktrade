@@ -1,0 +1,16 @@
+﻿@model Booktrade.Models.Book
+
+@{
+    ViewBag.Title = "AddBooks";
+}
+
+
+@Html.ValidationSummary(false)
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+    <p>
+        <button type="submit">Dodaj</button>
+    </p>
+}

@@ -1,0 +1,19 @@
+﻿@model Booktrade.Models.Book
+
+@{
+    ViewBag.Title = "MyBooks";
+}
+
+@using (var context = new Booktrade.AppDbContext())
+{
+  //  var xx = context.Books.Find();
+    if (xx != null)
+    {
+        <h2>chyba działa</h2>
+        @xx.Author.ToString();
+    }
+    <h1>test</h1>
+    <form action="/MyAccount/AddBooks">
+        <input type="submit" value="Dodaj książkę" />
+    </form>
+}
