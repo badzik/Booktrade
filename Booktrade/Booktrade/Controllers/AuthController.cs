@@ -68,7 +68,7 @@ namespace Booktrade.Controllers
             }
 
             // user authN failed
-            ModelState.AddModelError("", "Nieprawidłowy email lub hasło");
+            ModelState.AddModelError("", "Błędny login lub hasło");
             return View();
         }
 
