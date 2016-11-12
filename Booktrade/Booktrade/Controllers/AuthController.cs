@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -67,7 +68,7 @@ namespace Booktrade.Controllers
             }
 
             // user authN failed
-            ModelState.AddModelError("", "Invalid email or password");
+            ModelState.AddModelError("", "Nieprawidłowy email lub hasło");
             return View();
         }
 
@@ -94,7 +95,7 @@ namespace Booktrade.Controllers
                 Surname = model.Surname,
                 Province = model.Province,
                 PostalCode = model.PostalCode,
-                BankNumber = model.BankNumber,
+                BankNumber = "Nie podano",
                 City = model.City
                 
             };
@@ -107,9 +108,20 @@ namespace Booktrade.Controllers
                 return RedirectToAction("index", "home");
             }
 
+            string temp;
+            Regex regex = new Regex(@"Name .* is already taken.");
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error);
+                temp = error;
+                if (error == "Passwords must be at least 6 characters.")
+                {
+                    temp = "Hasło musi zawierać przynajmniej 6 znaków.";
+                }
+                if (regex.Match(error).Success)
+                {
+                    temp = "Istnieje konto dla podanego adresu email.";
+                }
+                ModelState.AddModelError("", temp);
             }
 
             return View();

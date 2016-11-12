@@ -31,6 +31,7 @@ namespace Booktrade.ViewModels
 
         [Required]
         [Display(Name = "Kod pocztowy")]
+        [DataType(DataType.PostalCode)]
         public string PostalCode { get; set; }
 
         [Required]
@@ -40,11 +41,6 @@ namespace Booktrade.ViewModels
         [Required]
         [Display(Name = "Województwo")]
         public string Province { get; set; }
-
-        [Required]
-        [Display(Name = "Nr konta bankowego")]
-        public string BankNumber { get; set; }
-
 
     }
 }
