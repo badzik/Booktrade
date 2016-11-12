@@ -5,11 +5,24 @@ using System.Web;
 using System.Web.Mvc;
 using Booktrade.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 
 namespace Booktrade.Controllers
 {
     public class MyAccountController : Controller
     {
+        private readonly UserManager<AppUser> userManager;
+
+        public MyAccountController()
+        {
+
+        }
+
+        public MyAccountController(UserManager<AppUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+
         // GET: MyAccount
         [HttpGet]
         public ActionResult MyBooks()
@@ -36,7 +49,6 @@ namespace Booktrade.Controllers
             {
                 return View();
             }
-
             var book = new Book
             {
                 Author = model.Author,
@@ -44,11 +56,11 @@ namespace Booktrade.Controllers
                 Genre = model.Genre,
                 Description = model.Description,
                 AddDate = model.AddDate,
-                Buyer = model.Buyer,
                 Price = model.Price,
                 Publisher = model.Publisher,
-                Seller = model.Seller,
-                PublicationDate = model.PublicationDate
+                PublicationDate = model.PublicationDate,
+                BookImage = model.BookImage
+
             };
 
             using (var context = new AppDbContext())
