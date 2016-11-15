@@ -32,7 +32,7 @@ namespace Booktrade.ViewModels
         [Display(Name = "Cena")]
         public float Price { get; set; }
         [Display(Name = "Zdjęcie")]
-        public byte[] BookImage { get; set; }
+        public HttpPostedFileBase BookImage { get; set; }
 
 
         public AppUser Seller { get; set; }

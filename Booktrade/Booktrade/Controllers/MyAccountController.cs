@@ -6,6 +6,11 @@ using System.Web.Mvc;
 using Booktrade.Models;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using System.Web.Security;
+using System.Diagnostics;
+using System.IO;
+using System.Web.Helpers;
+using Booktrade.ViewModels;
 
 namespace Booktrade.Controllers
 {
@@ -42,35 +47,46 @@ namespace Booktrade.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddBooks(Book model)
+        public ActionResult AddBooks(SellBookModel model)
         {
 
             if (!ModelState.IsValid)
             {
                 return View();
             }
+            var context = new AppDbContext();
+
+            //byte[] uploadedFile = new byte[model.BookImage.InputStream.Length];
+            //model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
+
             var book = new Book
             {
                 Author = model.Author,
                 Title = model.Title,
                 Genre = model.Genre,
                 Description = model.Description,
-                AddDate = model.AddDate,
+                AddDate = DateTime.Now,
                 Price = model.Price,
                 Publisher = model.Publisher,
                 PublicationDate = model.PublicationDate,
-                BookImage = model.BookImage
-
-            };
-
-            using (var context = new AppDbContext())
-            {
+                //BookImage = uploadedFile,
+                SellerId = System.Web.HttpContext.Current.User.Identity.GetUserId(),
+                Seller = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()),
+        };
+            //Debug.WriteLine(book.Seller.Email);
                 context.Books.Add(book);
                 context.SaveChanges();
-            }
+
             return View();
-
-
         }
+
+        public byte[] ConvertToBytes(HttpPostedFileBase image)
+        {
+            byte[] imageBytes = null;
+            BinaryReader reader = new BinaryReader(image.InputStream);
+            imageBytes = reader.ReadBytes((int)image.ContentLength);
+            return imageBytes;
+        }
+
     }
 }

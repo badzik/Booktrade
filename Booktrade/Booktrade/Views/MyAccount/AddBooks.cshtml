@@ -1,16 +1,113 @@
 ﻿@model Booktrade.ViewModels.SellBookModel
 
 @{
-    ViewBag.Title = "AddBooks";
+    ViewBag.Title = "Dodaj Książkę";
 }
 
+<head>
+    <style>
+        .form-group > * {
+            margin-bottom: 10px;
+        }
+    </style>
+</head> 
 
-@Html.ValidationSummary(false)
-
-@using (Html.BeginForm(new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    @Html.EditorForModel()
-    <p>
-        <button type="submit">Dodaj</button>
-    </p>
+    <fieldset>
+        <legend>Wystaw książkę, którą chcesz sprzedać lub wymienić na inną.</legend>
+        <div class="col-sm-6 col-sm-offset-3">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="Title" class="col-sm-5 col-lg-3 control-label">Tytuł</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.Title,
+                        new { @class = "form-control", placeholder = "Tytuł książki", required = "required", Type = "text" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Author" class="col-sm-5 col-lg-3 control-label">Autor</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.Author,
+                        new { @class = "form-control", placeholder = "Autor książki", required = "required", Type = "text" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Description" class="col-sm-5 col-lg-3  control-label">Opis</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.Description,
+                        new { @class = "form-control", placeholder = "Opis książki", required = "required", Type = "textarea", rows = "5"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Price" class="col-sm-5 col-lg-3 control-label">Cena</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.Price,
+                        new { @class = "form-control", placeholder = "1234567890", required = "required", Type = "number" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="BookImage" name="file" class="col-sm-5 col-lg-3 control-label">Zdjęcie</label>
+                    
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            @*<div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>*@
+                            <div>
+                                <span class="btn btn-file">@*<span class="fileupload-new">Wybierz zdjęcie</span><span class="fileupload-exists">Zmień</span>*@<input type="file" /></span>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="form-group">
+                    <label for="Genre" class="col-sm-5 col-lg-3 control-label">Gatunek</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.DropDownListFor(m => m.Genre, new SelectList(new List<string>() { "Fantastyka", "Sci Fi", "Kryminały", "Romanse", "Dla dzieci", "Horrory", "Kuchnia", "Biografie", "Historyczne", "Literatura poważna", "Turystyka" }),
+                       new { @class = "form-control" })
+                    </div>
+                </div>
+
+                @*<div class="form-group">
+                    <label for="Changeable" class="col-sm-5 col-lg-3 control-label">Chcesz się wymienić za inną książkę?</label>*@
+                    @*<div class="btn-group btn-toggle">
+                        <button class="btn btn-sm btn-default">TAK</button>
+                        <button class="btn btn-sm btn-primary active">NIE</button>
+                       
+                    </div>*@
+
+                    @*<div class="btn-group btn-toggle">
+                        <button class="btn btn-sm btn-default">ON</button>
+                        <button class="btn btn-sm btn-primary active">OFF</button>
+                    </div>*@
+                @*</div>*@
+
+                <div class="form-group">
+                    <label for="Publisher" class="col-sm-5 col-lg-3 control-label">Wydawca</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.Publisher,
+                        new { @class = "form-control", placeholder = "Wydawca",  Type = "text" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="PublicationDate" class="col-sm-5 col-lg-3 control-label">Data wydania</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.PublicationDate,
+                        new { @class = "form-control",   Type = "date" })
+                    </div>
+                </div>
+
+
+                <div class="col-sm-offset-5 col-sm-2">
+                    <button type="submit" class="btn btn-default">Wystaw</button>
+                </div>
+
+
+
+            </form>
+        </div>
+    </fieldset>
+
 }

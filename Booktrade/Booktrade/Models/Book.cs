@@ -37,5 +37,6 @@ namespace Booktrade.Models
         
         public AppUser Buyer { get; set; }
 
+
     }
 }
