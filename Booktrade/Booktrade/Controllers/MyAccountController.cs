@@ -52,12 +52,32 @@ namespace Booktrade.Controllers
 
             if (!ModelState.IsValid)
             {
+                List<string> errors = new List<string>();
+                foreach (var modelStateVal in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelStateVal.Errors)
+                    {
+                        var errorMessage = error.ErrorMessage;
+                        var exception = error.Exception;
+                        errors.Add(errorMessage);
+                    }
+                }
+                foreach(string error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                
                 return View();
             }
             var context = new AppDbContext();
 
-            byte[] uploadedFile = new byte[model.BookImage.InputStream.Length];
-            model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
+
+            byte[] uploadedFile = null;
+            if (model.BookImage != null)
+            {
+                uploadedFile = new byte[model.BookImage.InputStream.Length];
+                model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
+            }
 
             var book = new Book
             {
@@ -68,6 +88,7 @@ namespace Booktrade.Controllers
                 AddDate = DateTime.Now,
                 Price = model.Price,
                 Publisher = model.Publisher,
+                Changeable=model.Changeable,
                 PublicationDate = model.PublicationDate,
                 BookImage = uploadedFile,
                 SellerId = System.Web.HttpContext.Current.User.Identity.GetUserId(),

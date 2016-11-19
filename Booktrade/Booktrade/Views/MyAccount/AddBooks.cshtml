@@ -10,7 +10,7 @@
             margin-bottom: 10px;
         }
     </style>
-</head> 
+</head>
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -38,7 +38,7 @@
                     <label for="Description" class="col-sm-5 col-lg-3  control-label">Opis</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextAreaFor(m => m.Description,
-                        new { @class = "form-control", placeholder = "Opis książki", required = "required", Type = "textarea", rows = "4"})
+                        new { @class = "form-control", placeholder = "Opis książki", required = "required", Type = "textarea", rows = "4" })
                     </div>
                 </div>
 
@@ -52,55 +52,57 @@
 
                 <div class="form-group">
                     <label for="BookImage" name="BookImage" class="col-sm-5 col-lg-3 control-label">Zdjęcie</label>
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                           @Html.TextBoxFor(m => m.BookImage,
+                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                        @Html.TextBoxFor(m => m.BookImage,
                           new { @class = "btn btn-file", type = "file" })
-                        </div>
                     </div>
+                </div>
 
                 <div class="form-group">
                     <label for="Genre" class="col-sm-5 col-lg-3 control-label">Gatunek</label>
                     <div class="col-sm-7 col-lg-9">
-                        @Html.DropDownListFor(m => m.Genre, new SelectList(new List<string>() { "Fantastyka", "Sci Fi", "Kryminały", "Romanse", "Dla dzieci", "Horrory", "Kuchnia", "Biografie", "Historyczne", "Literatura poważna", "Turystyka" }),
+                        @Html.DropDownListFor(m => m.Genre, new SelectList(new List<string>() { "Fantastyka", "Sci Fi", "Kryminał", "Romans", "Dla dzieci", "Horror", "Kuchnia", "Biografia", "Historyczne", "Literatura poważna", "Turystyka" }),
                        new { @class = "form-control" })
                     </div>
                 </div>
 
-               <div class="form-group">
+                <div class="form-group">
                     <label for="changeable" class="col-sm-5 col-lg-10 control-label">Czy chcesz wymienić się na inną książkę?</label>
-                  
-                       <div class="btn-group btn-toggle">
-                           <label>@Html.RadioButtonFor(i => i.Changeable, "1", new { @class = "btn btn-sm btn-default" })Tak</label>
-                           <label>@Html.RadioButtonFor(i => i.Changeable, "0", new { @class = "btn btn-sm btn-default" })Nie</label>
-                       </div>
+
+                    <div class="btn-group btn-toggle">
+                        <label>@Html.RadioButtonFor(i => i.Changeable, true, new { @class = "btn btn-sm btn-default", Checked="checked" })Tak</label>
+                        <label>@Html.RadioButtonFor(i => i.Changeable, false, new { @class = "btn btn-sm btn-default" })Nie</label>
+                    </div>
+                </div>
 
 
 
-                       <div class="form-group">
-                           <label for="Publisher" class="col-sm-5 col-lg-3 control-label">Wydawca</label>
-                           <div class="col-sm-7 col-lg-9">
-                               @Html.TextBoxFor(m => m.Publisher,
+                <div class="form-group">
+                    <label for="Publisher" class="col-sm-5 col-lg-3 control-label">Wydawca</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.Publisher,
                         new { @class = "form-control", placeholder = "Wydawca", Type = "text" })
-                           </div>
-                       </div>
+                    </div>
+                </div>
 
-                       <div class="form-group">
-                           <label for="PublicationDate" class="col-sm-5 col-lg-3 control-label">Data wydania</label>
-                           <div class="col-sm-7 col-lg-9">
-                               @Html.TextBoxFor(m => m.PublicationDate,
+                <div class="form-group">
+                    <label for="PublicationDate" class="col-sm-5 col-lg-3 control-label">Data wydania</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.PublicationDate,
                         new { @class = "form-control", Type = "date" })
-                           </div>
-                       </div>
+                    </div>
+                </div>
 
 
-                       <div class="col-sm-offset-5 col-sm-2">
-                           <button type="submit" class="btn btn-default">Wystaw</button>
-                       </div>
+                <div class="col-sm-offset-5 col-sm-2">
+                    <button type="submit" class="btn btn-default">Wystaw</button>
+                </div>
 
 
 
-</form>
+            </form>
         </div>
     </fieldset>
 
+    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 }
