@@ -33,9 +33,9 @@ namespace Booktrade.Models
         public string BuyerId { get; set; }
 
         
-        public AppUser Seller { get; set; }
+        public virtual AppUser Seller { get; set; }
         
-        public AppUser Buyer { get; set; }
+        public virtual AppUser Buyer { get; set; }
 
 
     }

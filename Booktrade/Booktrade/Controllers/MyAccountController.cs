@@ -56,8 +56,8 @@ namespace Booktrade.Controllers
             }
             var context = new AppDbContext();
 
-            //byte[] uploadedFile = new byte[model.BookImage.InputStream.Length];
-            //model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
+            byte[] uploadedFile = new byte[model.BookImage.InputStream.Length];
+            model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
 
             var book = new Book
             {
@@ -69,11 +69,10 @@ namespace Booktrade.Controllers
                 Price = model.Price,
                 Publisher = model.Publisher,
                 PublicationDate = model.PublicationDate,
-                //BookImage = uploadedFile,
+                BookImage = uploadedFile,
                 SellerId = System.Web.HttpContext.Current.User.Identity.GetUserId(),
                 Seller = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()),
         };
-            //Debug.WriteLine(book.Seller.Email);
                 context.Books.Add(book);
                 context.SaveChanges();
 
