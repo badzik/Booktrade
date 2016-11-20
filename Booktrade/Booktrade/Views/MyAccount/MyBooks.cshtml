@@ -9,14 +9,21 @@
     var xx = context.Books.ToList();
     if (xx != null)
     {
-        <h2>chyba działa</h2>
-        foreach (var book in xx)
-        {
-            @book.Seller.UserName;
-        }
-        
+        <ul class="list-group">
+            @foreach (var book in xx)
+            {
+                <li class="list-group-item clearfix">
+                    @book.Title
+                    <div class="pull-right">
+                        <a href="#" class="btn btn-primary">Edytuj</a>
+                        <a href="#" class="btn btn-danger">Usuń</a>
+                    </div>
+                </li>
+            }
+        </ul>
+
     }
     <form action="/MyAccount/AddBooks">
-        <input type="submit" value="Dodaj książkę" />
+        <input class="btn btn-default" type="submit" value="Dodaj książkę" />
     </form>
 }

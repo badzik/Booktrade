@@ -6,8 +6,10 @@ using System.Web;
 
 namespace Booktrade.ViewModels
 {
-    public class RegisterModel : UserAttributes
+    public class UserSettingsModel : UserAttributes
     {
-
+        [Required]
+        [Display(Name = "Numer konta")]
+        public string BankAcount { get; set; }
     }
 }
