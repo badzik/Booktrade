@@ -21,18 +21,16 @@ namespace Booktrade.ViewModels
         [Required]
         [Display(Name = "Autor")]
         public string Author { get; set; }
-        [Display(Name = "Data wydania")]
-        public DateTime PublicationDate { get; set; }
         [Display(Name = "Wydawca")]
         public string Publisher { get; set; }
+        [Display(Name = "Data wydania")]
+        public DateTime? PublicationDate { get; set; }
         [Display(Name = "Chęć wymiany")]
         public bool Changeable { get; set; }
-        [Required]
+        [Range(0, 5000)]
         [Display(Name = "Cena")]
-        public float Price { get; set; }
+        public float? Price { get; set; }
         public HttpPostedFileBase BookImage { get; set; }
-
-
         public AppUser Seller { get; set; }
 
     }

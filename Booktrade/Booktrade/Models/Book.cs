@@ -13,15 +13,15 @@ namespace Booktrade.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BookId { get; set; }
-
+  
         public string Title { get; set; }
         public string Description { get; set; }
         public string Genre { get; set; }
         public string Author { get; set; }
-        public DateTime PublicationDate { get; set; }
+        public DateTime? PublicationDate { get; set; }
         public string Publisher { get; set; }
         public bool Changeable { get; set; }
-        public float Price { get; set; }
+        public float? Price { get; set; }
         public DateTime AddDate { get; set; }
         public bool isSold { get; set; }
         public bool isChanged { get; set; }
