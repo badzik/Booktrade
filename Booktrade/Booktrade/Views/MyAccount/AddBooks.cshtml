@@ -10,8 +10,9 @@
             margin-bottom: 10px;
         }
     </style>
+    <link rel="stylesheet" href="~/Content/addImage.css">
 </head>
-
+<script src = "/scripts/addImage.js"></script>
 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <fieldset>
@@ -50,12 +51,23 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="BookImage" name="BookImage" class="col-sm-5 col-lg-3 control-label">Zdjęcie</label>
-                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                        @Html.TextBoxFor(m => m.BookImage,
-                          new { @class = "btn btn-file", type = "file" })
-                    </div>
+
+                  
+                        <div class="form-group">
+                            <label for="BookImage" class="col-sm-5 col-lg-3 control-label">Zdjęcie</label>
+                            <div class="col-sm-7 col-lg-9">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-default btn-file">
+                                            Wyberz <input type="file" id="imgInp" for="BookImage" name="BookImage">
+                                        </span>
+                                    </span>
+                                    <input type="text" class="form-control" readonly>
+                                </div>
+
+                                <img id='img-upload' />
+                            </div>
+
                 </div>
 
                 <div class="form-group">
@@ -106,3 +118,5 @@
 
     @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 }
+
+
