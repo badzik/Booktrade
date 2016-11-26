@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -10,9 +11,11 @@ namespace Booktrade.ViewModels
     public class SellBookModel
     {
         [Required]
+        [StringLength(50)]
         [Display(Name = "Tytuł")]
         public string Title { get; set; }
         [Required]
+        [StringLength(50)]
         [Display(Name = "Opis")]
         public string Description { get; set; }
         [Required]

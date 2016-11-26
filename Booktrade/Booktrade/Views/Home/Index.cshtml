@@ -60,30 +60,52 @@
                     </div>
                 </div>
                 <div class="row">
-               @if (books != null)
+               @if (books.Count()!=0)
                {
-                   foreach (var book in books)
+                   
+                   foreach (var book in books.Take(21))
                    {
                        string imageSrc = "/Images/noFoto.png";
                        if (book.BookImage != null)
                        {
+                           //Bitmap newBitmap = GetImageFromByteArray(File.ReadAllBytes(book.BookImage));
                            string imageBase64 = Convert.ToBase64String(book.BookImage);
                            imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
                        }
                     <div class="col-sm-4 col-lg-4 col-md-4">
                         <div class="thumbnail">
-                            <img src="@imageSrc" alt="Coś się rypło">
-                            <div class="caption">
-
-                                <h4>
-                                    <a href="#">@book.Author - @book.Title</a>
-                                </h4>
-                                <p>@book.Description</p>
-                                <h4 class="pull-right">@book.Price zł</h4>
+                            <div style="height:150px; position:static;  width: 100%; top:0;left: 0;">
+                                <style>
+                                div > img{
+                                        width: 80%;
+                                        max-height: 100%;
+                                        width: 100%;
+                                        display: block;
+                                }</style>
+                                <img src="@imageSrc " alt="Coś się rypło">
                             </div>
+                            
+                            @*<img src="@Url.Action("GetThumbnail", "MyAccount", new { img = "*/Images/noFoto.png", width = 35, height= 35 })" alt="Coś się rypło" />*@
+
+                            <div class="caption"  style= "width: 100%; word-wrap: break-word; position:relative;">
+
+                                <h5>
+                                    <a href="#">@book.Author - @book.Title</a>  
+                                </h5>
+                                     @book.Genre
+                                @{
+                                    if (book.Changeable == true)
+                                    {
+                                        <i class="fa fa-check-square" title="Możliwość wymiany" style="color:lightgreen"></i>
+                                    }
+                                }
+                                <div>
+                                    <h4 class="pull-right">@book.Price zł</h4>
+                                </div>
+                             </div>
                         </div>
                     </div>
-                       }
+                    }
                    
                }
                else

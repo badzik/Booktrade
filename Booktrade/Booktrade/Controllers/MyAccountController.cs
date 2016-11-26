@@ -78,6 +78,10 @@ namespace Booktrade.Controllers
                 uploadedFile = new byte[model.BookImage.InputStream.Length];
                 model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
             }
+            if (model.Price == null)
+            {
+                model.Price = 0;
+            }
 
             var book = new Book
             {
@@ -88,7 +92,7 @@ namespace Booktrade.Controllers
                 AddDate = DateTime.Now,
                 Price = model.Price,
                 Publisher = model.Publisher,
-                Changeable=model.Changeable,
+                Changeable= model.Changeable,
                 PublicationDate = model.PublicationDate,
                 BookImage = uploadedFile,
                 SellerId = System.Web.HttpContext.Current.User.Identity.GetUserId(),
@@ -99,14 +103,5 @@ namespace Booktrade.Controllers
 
             return View();
         }
-
-        public byte[] ConvertToBytes(HttpPostedFileBase image)
-        {
-            byte[] imageBytes = null;
-            BinaryReader reader = new BinaryReader(image.InputStream);
-            imageBytes = reader.ReadBytes((int)image.ContentLength);
-            return imageBytes;
-        }
-
     }
 }
