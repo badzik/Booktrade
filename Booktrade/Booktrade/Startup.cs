@@ -33,8 +33,12 @@ namespace Booktrade
                 };
                 usermanager.ClaimsIdentityFactory = new AppUserClaimsIdentityFactory();
 
+                var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("Booktrade");
+                usermanager.UserTokenProvider = new Microsoft.AspNet.Identity.Owin.DataProtectorTokenProvider<AppUser>(provider.Create("PasswordReset"));
+
                 return usermanager;
             };
+
         }
     }
 }
