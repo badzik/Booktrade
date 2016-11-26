@@ -18,7 +18,7 @@ namespace Booktrade.Controllers
     {
         private readonly UserManager<AppUser> userManager;
 
-        public MyAccountController()
+        public MyAccountController() : this(Startup.UserManagerFactory.Invoke())
         {
 
         }
@@ -102,6 +102,109 @@ namespace Booktrade.Controllers
                 context.SaveChanges();
 
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult Settings()
+        {
+            var context = new AppDbContext();
+            var errMsg = TempData["ErrorMessage"] as string;
+            AppUser user = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            SettingsViewModel settings = new SettingsViewModel()
+            {
+                SettingsModel=new UserSettingsModel()
+                {
+                    Address = user.Address,
+                    BankAccount = user.BankNumber,
+                    City = user.City,
+                    Name = user.Name,
+                    PostalCode = user.PostalCode,
+                    Surname = user.Surname,
+                    Province = user.Province
+                }
+                
+            };
+            if (errMsg != null)
+            {
+                ModelState.AddModelError("", errMsg);
+            }
+            return View(settings);
+        }
+
+        [HttpPost]
+        public ActionResult SettingsChange(SettingsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                List<string> errors = new List<string>();
+                foreach (var modelStateVal in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelStateVal.Errors)
+                    {
+                        var errorMessage = error.ErrorMessage;
+                        var exception = error.Exception;
+                        errors.Add(errorMessage);
+                    }
+                }
+                foreach (string error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+
+                return View("Settings");
+            }
+
+            var context = new AppDbContext();
+            AppUser user = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            user.Address = model.SettingsModel.Address;
+            user.BankNumber = model.SettingsModel.BankAccount;
+            user.City = model.SettingsModel.City;
+            user.Name = model.SettingsModel.Name;
+            user.Surname = model.SettingsModel.Surname;
+            user.PostalCode = model.SettingsModel.PostalCode;
+            user.Province = model.SettingsModel.Province;
+            context.SaveChanges();
+
+            return View("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult PasswordChange(SettingsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                List<string> errors = new List<string>();
+                foreach (var modelStateVal in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelStateVal.Errors)
+                    {
+                        var errorMessage = error.ErrorMessage;
+                        var exception = error.Exception;
+                        errors.Add(errorMessage);
+                    }
+                }
+                foreach (string error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+
+                return View("Settings");
+            }
+            if (model.NewPassword != model.NewPasswordRepeat)
+            {
+                TempData["ErrorMessage"] = "Podane hasła nie są takie same.";
+                return RedirectToAction("Settings", "MyAccount", new { model = model });
+            }
+            IdentityResult result = userManager.ChangePassword(System.Web.HttpContext.Current.User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Information", "Info", new { text = "PasswordChanged" });
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Nie udało się zmienić hasła.";
+                return RedirectToAction("Settings", "MyAccount", new { model=model });
+            }
         }
     }
 }

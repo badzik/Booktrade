@@ -9,15 +9,6 @@ namespace Booktrade.ViewModels
     public abstract class UserAttributes
     {
         [Required]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-
-        [Required]
-        [Display(Name = "Hasło")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-        [Required]
         [Display(Name = "Imię")]
         public string Name { get; set; }
 
