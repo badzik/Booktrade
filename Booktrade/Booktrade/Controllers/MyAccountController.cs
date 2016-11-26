@@ -11,6 +11,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Web.Helpers;
 using Booktrade.ViewModels;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Booktrade.Controllers
 {
@@ -77,8 +79,18 @@ namespace Booktrade.Controllers
             {
                 uploadedFile = new byte[model.BookImage.InputStream.Length];
                 model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
+
+                //próba skalowania obrazu
+                //Image image = Image.FromStream(new MemoryStream(uploadedFile));
+                //Image newImage;
+                //newImage = ScaleImage(image, 300, 150);
+                //var ms = new MemoryStream();
+                //newImage.Save(ms, ImageFormat.Gif);
+                //ms.ToArray();
+                //uploadedFile = ms.ToArray();
+                //model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
             }
-            if (model.Price == null)
+                if (model.Price == null)
             {
                 model.Price = 0;
             }
@@ -100,8 +112,27 @@ namespace Booktrade.Controllers
         };
                 context.Books.Add(book);
                 context.SaveChanges();
+           
 
-            return View();
+            return RedirectToAction("index", "home");
         }
+
+        public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+        {
+            var ratioX = (double)maxWidth / image.Width;
+            var ratioY = (double)maxHeight / image.Height;
+            var ratio = Math.Min(ratioX, ratioY);
+
+            var newWidth = (int)(image.Width * ratio);
+            var newHeight = (int)(image.Height * ratio);
+
+            var newImage = new Bitmap(newWidth, newHeight);
+
+            using (var graphics = Graphics.FromImage(newImage))
+                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+
+            return newImage;
+        }
+
     }
 }
