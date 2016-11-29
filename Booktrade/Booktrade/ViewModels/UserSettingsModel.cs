@@ -10,6 +10,6 @@ namespace Booktrade.ViewModels
     {
         [Required]
         [Display(Name = "Numer konta")]
-        public string BankAcount { get; set; }
+        public string BankAccount { get; set; }
     }
 }

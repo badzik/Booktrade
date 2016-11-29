@@ -24,7 +24,7 @@ namespace Booktrade.Controllers
             }
             if (text == "PasswordChanged")
             {
-                temp = "Hasło zostało zmienione. Można zalogować się ponownie.";
+                temp = "Hasło zostało zmienione.";
             }
             if(text== "PasswordChangeFailed")
             {
