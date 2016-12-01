@@ -34,6 +34,10 @@ namespace Booktrade.Controllers
             {
                 temp = "Brak dostępu.";
             }
+            if (text == "MessageSendFail")
+            {
+                temp = "Wystąpił problem podczas wysyłania wiadomości";
+            }
             return View((object)temp);
         }
     }

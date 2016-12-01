@@ -12,6 +12,7 @@ namespace Booktrade
     public class AppDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Book> Books { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         public AppDbContext()
             : base("DefaultConnection")

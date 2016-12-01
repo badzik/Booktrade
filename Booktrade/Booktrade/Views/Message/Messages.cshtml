@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNet.Identity
+@model Booktrade.ViewModels.ConversationPreviewsModel
+
+@{
+    ViewBag.Title = "Messages";
+}
+
+<h2>Wiadomości</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <table>
+                    <tbody>
+                        @{
+                            foreach (var m in Model.Conversations)
+                            {
+                                <tr @{if (!m.LastMessage.isRead && m.LastMessage.ReceiverId == CurrentUser.Identity.GetUserId()) { <text>style="background-color:#ade6f4"</text>} }>
+                                    <td style="width:80%">
+                                        <strong>
+                                            <a href="#">@m.Interlocutor.UserName</a>
+                                        </strong><br>
+                                        <span>
+                                            <a href="@Url.Action("conversation", "message", new { interlocutorEmail=m.Interlocutor.Email })">@m.LastMessage.Text</a>
+                                        </span>
+                                    </td>
+                                    <td style="width:20%">
+                                        <span>@m.LastMessage.SendDate</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
