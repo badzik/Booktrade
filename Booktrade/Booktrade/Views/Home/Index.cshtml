@@ -8,6 +8,8 @@
     @{
         AppDbContext db = new AppDbContext();
         var books = db.Books.ToList();
+        books = books.OrderBy(u => u.AddDate).ToList();
+        books.Reverse();
     }
     <!-- Page Content -->
     <div class="container">
@@ -85,13 +87,13 @@
                                 <img src="@imageSrc " alt="Coś się rypło">
                             </div>
                             
-                            @*<img src="@Url.Action("GetThumbnail", "MyAccount", new { img = "*/Images/noFoto.png", width = 35, height= 35 })" alt="Coś się rypło" />*@
 
                             <div class="caption"  style= "width: 100%; word-wrap: break-word; position:relative;">
-
-                                <h5>
-                                    <a href="#">@book.Author - @book.Title</a>  
-                                </h5>
+                                <div style="height:50px">
+                                    <h5>
+                                        <a href="#">@book.Author - @book.Title</a>
+                                    </h5>
+                                </div>
                                      @book.Genre
                                 @{
                                     if (book.Changeable == true)
@@ -100,7 +102,18 @@
                                     }
                                 }
                                 <div>
-                                    <h4 class="pull-right">@book.Price zł</h4>
+                                    @if (book.Changeable == false && book.Price == 0)
+                                    {
+                                        <h4 class="pull-right">Za darmo</h4>
+                                    }
+                                    else if (book.Changeable == true && book.Price == 0)
+                                    {
+                                        <h4 class="pull-right">Tylko wymiana</h4>
+                                    }
+                                    else
+                                    {
+                                        <h4 class="pull-right">@book.Price zł</h4>
+                                    }                                    
                                 </div>
                              </div>
                         </div>
