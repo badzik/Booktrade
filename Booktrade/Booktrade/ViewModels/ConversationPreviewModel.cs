@@ -10,5 +10,6 @@ namespace Booktrade.ViewModels
     {
         public Message LastMessage { get; set; }
         public AppUser Interlocutor { get; set; }
+
     }
 }

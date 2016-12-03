@@ -73,33 +73,7 @@ namespace Booktrade.Controllers
 
         public ActionResult Messages()
         {
-            var context = new AppDbContext();
-            Message lastMessage = null;
-            List<Message> tempList = new List<Message>();
-            AppUser currentUser = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
-            ConversationPreviewsModel model = new ConversationPreviewsModel()
-            {
-                Conversations = new List<ConversationPreviewModel>()
-            };
-            HashSet<string> interlocutorsIds = new HashSet<string>();
-            //create a list of interlocutors
-            foreach (Message message in currentUser.SentMessages.Concat(currentUser.ReceivedMessages))
-            {
-                if (message.ReceiverId == currentUser.Id) interlocutorsIds.Add(message.SenderId);
-                else interlocutorsIds.Add(message.ReceiverId);
-            }
-            //find last sent or received message in conversation
-            foreach (string interlocutorId in interlocutorsIds)
-            {
-                tempList = currentUser.SentMessages.Concat(currentUser.ReceivedMessages).Where(x => x.ReceiverId == interlocutorId || x.SenderId == interlocutorId).OrderBy(x => x.SendDate).ToList();
-                lastMessage = tempList.Last();
-                model.Conversations.Add(new ConversationPreviewModel()
-                {
-                    Interlocutor = context.Users.Find(interlocutorId),
-                    LastMessage = lastMessage
-                });
-            }
-            return View(model);
+            return View(GetConversationPreviews());
         }
 
         public ActionResult Conversation(string interlocutorEmail)
@@ -114,7 +88,7 @@ namespace Booktrade.Controllers
                 Sender = currentUser,
                 Text = null
             };
-            model.messages = currentUser.SentMessages.Concat(currentUser.ReceivedMessages).Where(x => x.Receiver.Id == interlocutor.Id || x.Sender.Id == interlocutor.Id).OrderBy(x => x.SendDate).ToList();
+            model.messages = currentUser.SentMessages.Concat(currentUser.ReceivedMessages).Where(x => x.Receiver.Id == interlocutor.Id || x.Sender.Id == interlocutor.Id).OrderByDescending(x => x.SendDate).ToList();
             if (model.messages.Last().Receiver.Id == currentUser.Id && !model.messages.Last().isRead)
             {
                 var context = new AppDbContext();
@@ -147,7 +121,62 @@ namespace Booktrade.Controllers
             };
             context.Messages.Add(message);
             context.SaveChanges();
-            return RedirectToAction("Conversation", "Message", new {interlocutorEmail=receiverEmail });
+            return RedirectToAction("Conversation", "Message", new { interlocutorEmail = receiverEmail });
+        }
+
+        public static ConversationPreviewsModel GetConversationPreviews()
+        {
+            var context = new AppDbContext();
+            Message lastMessage = null;
+            List<Message> tempList = new List<Message>();
+            AppUser currentUser = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            ConversationPreviewsModel model = new ConversationPreviewsModel()
+            {
+                Conversations = new List<ConversationPreviewModel>()
+            };
+            HashSet<string> interlocutorsIds = new HashSet<string>();
+            //create a list of interlocutors
+            foreach (Message message in currentUser.SentMessages.Concat(currentUser.ReceivedMessages))
+            {
+                if (message.ReceiverId == currentUser.Id) interlocutorsIds.Add(message.SenderId);
+                else interlocutorsIds.Add(message.ReceiverId);
+            }
+            //find last sent or received message in conversation
+            foreach (string interlocutorId in interlocutorsIds)
+            {
+                tempList = currentUser.SentMessages.Concat(currentUser.ReceivedMessages).Where(x => x.ReceiverId == interlocutorId || x.SenderId == interlocutorId).OrderBy(x => x.SendDate).ToList();
+                lastMessage = tempList.Last();
+                model.Conversations.Add(new ConversationPreviewModel()
+                {
+                    Interlocutor = context.Users.Find(interlocutorId),
+                    LastMessage = lastMessage
+                });
+            }
+            return model;
+        }
+
+        public static string CalculateMessageTime(DateTime time)
+        {
+            TimeSpan t;
+            string text = "";
+            t = DateTime.Now - time;
+            if (t.TotalMinutes < 60)
+            {
+                text = Math.Ceiling(t.TotalMinutes) + " min. temu";
+            }
+            else if (t.TotalHours < 24)
+            {
+                text = Math.Ceiling(t.TotalHours) + " godz. temu";
+            }
+            else if (t.TotalDays <= 31)
+            {
+                text = Math.Ceiling(t.TotalDays) + " dni temu";
+            }
+            else if (t.TotalDays > 31)
+            {
+                text = Math.Ceiling(t.TotalDays / 31) + "mies. temu";
+            }
+            return text;
         }
     }
 }

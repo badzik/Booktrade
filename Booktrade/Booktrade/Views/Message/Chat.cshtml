@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using Booktrade.Controllers;
 @model ICollection<Booktrade.Models.Message>
 
 <div class="panel-body">
@@ -7,24 +8,7 @@
             string time = "12 minut temu";
             foreach (Booktrade.Models.Message m in Model)
             {
-                TimeSpan t = DateTime.Now - m.SendDate;
-                if (t.TotalMinutes < 60)
-                {
-                    time = Math.Ceiling(t.TotalMinutes) + " min. temu";
-                }
-                else if (t.TotalHours < 24)
-                {
-                    time = Math.Ceiling(t.TotalHours) + " godz. temu";
-                }
-                else if (t.TotalDays <= 31)
-                {
-                    time = Math.Ceiling(t.TotalDays) + " dni temu";
-                }
-                else if (t.TotalDays > 31)
-                {
-                    time = Math.Ceiling(t.TotalDays / 31) + "mies. temu";
-                }
-
+                time=MessageController.CalculateMessageTime(m.SendDate);
                 if (m.Receiver.Id == CurrentUser.Identity.GetUserId())
                 {
                     <li class="left clearfix">
