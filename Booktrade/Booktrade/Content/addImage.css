@@ -1,13 +1,17 @@
 ﻿
-            .btn-file {
+            /*.btn-file {
                 position: relative;
                 overflow: hidden;
-            }
+            }*/
 
                 .btn-file input[type=file] {
+                    width:100px;
                     position: absolute;
                     top: 0;
+                     display: inline-block;
+                    overflow: hidden;
                     right: 0;
+                    color: transparent;
                     min-width: 100%;
                     min-height: 100%;
                     font-size: 100px;
@@ -20,6 +24,6 @@
                     display: block;
                 }
 
-            #img-upload {
+            /*#img-upload {
                 width: 100%;
-            }
+            }*/

@@ -33,8 +33,15 @@ namespace Booktrade.ViewModels
         [Range(0, 5000)]
         [Display(Name = "Cena")]
         public float? Price { get; set; }
-        public HttpPostedFileBase BookImage { get; set; }
+        [Display(Name = "Zdjęcie")]
+        public IEnumerable<HttpPostedFileBase> BookImages { get; set; }
         public AppUser Seller { get; set; }
 
-    }
+        //DELIVERY
+        [Display(Name = "Opcje dostawy")]
+        public List<float> DeliveryPrice { get; set; }
+        public List<string> DeliveryName  { get; set; }
+
+
+}
 }

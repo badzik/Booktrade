@@ -25,17 +25,19 @@ namespace Booktrade.Models
         public DateTime AddDate { get; set; }
         public bool isSold { get; set; }
         public bool isChanged { get; set; }
-        public byte[] BookImage { get; set; }
-
         [ForeignKey("Seller")]
         public string SellerId { get; set; }
         [ForeignKey("Buyer")]
         public string BuyerId { get; set; }
 
-        
-        public virtual AppUser Seller { get; set; }
-        
+        public virtual AppUser Seller { get; set; }     
         public virtual AppUser Buyer { get; set; }
+
+        [InverseProperty("BookImg")]
+        public virtual ICollection<BookImage> ImagesForBook { get; set; }
+
+        [InverseProperty("DeliveryPrices")]
+        public virtual ICollection<Delivery> DeliveryforBook { get; set; }
 
 
     }

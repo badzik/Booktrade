@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <link href="~/Content/shop-homepage.css" rel="stylesheet" type="text/css" />
@@ -7,9 +6,9 @@
 <body>
     @{
         AppDbContext db = new AppDbContext();
-        var books = db.Books.ToList();
-        books = books.OrderBy(u => u.AddDate).ToList();
-        books.Reverse();
+            var books = db.Books.ToList();
+            books = books.OrderBy(u => u.AddDate).ToList();
+            books.Reverse();
     }
     <!-- Page Content -->
     <div class="container">
@@ -64,14 +63,15 @@
                 <div class="row">
                @if (books.Count()!=0)
                {
-                   
+
                    foreach (var book in books.Take(21))
                    {
                        string imageSrc = "/Images/noFoto.png";
-                       if (book.BookImage != null)
+                       if (book.ImagesForBook.FirstOrDefault() != null) 
                        {
-                           //Bitmap newBitmap = GetImageFromByteArray(File.ReadAllBytes(book.BookImage));
-                           string imageBase64 = Convert.ToBase64String(book.BookImage);
+                           // Bitmap newBitmap = GetImageFromByteArray(File.ReadAllBytes(book.BookImage)); to bylo chyba wczesniej zakomentowane
+                           var firstImage = book.ImagesForBook.First();
+                           string imageBase64 = Convert.ToBase64String(firstImage.Image);
                            imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
                        }
                     <div class="col-sm-4 col-lg-4 col-md-4">
@@ -84,7 +84,7 @@
                                         width: 100%;
                                         display: block;
                                 }</style>
-                                <img src="@imageSrc " alt="Coś się rypło">
+                                <img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';"/>
                             </div>
                             
 
@@ -129,7 +129,6 @@
             </div>
         </div>
     </div>
-    <!-- /.container -->
     <div class="container">
         <hr>
         <!-- Footer -->

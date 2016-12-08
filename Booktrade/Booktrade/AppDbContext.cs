@@ -12,7 +12,8 @@ namespace Booktrade
     public class AppDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Book> Books { get; set; }
-
+        public DbSet<BookImage> BookImages { get; set; }
+        public DbSet<Delivery> DeliveryOptions { get; set; }
         public AppDbContext()
             : base("DefaultConnection")
         {

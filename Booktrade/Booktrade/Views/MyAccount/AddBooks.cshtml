@@ -5,6 +5,9 @@
 }
 
 <head>
+    <script src='~/scripts/jquery.form.js' type="text/javascript" language="javascript"></script>
+    <script src='~/scripts/jquery.MetaData.js' type="text/javascript" language="javascript"></script>
+    <script src='~/scripts/jQuery.MultiFile.min.js' type="text/javascript" language="javascript"></script>
     <style>
         .form-group > * {
             margin-bottom: 10px;
@@ -12,7 +15,7 @@
     </style>
     <link rel="stylesheet" href="~/Content/addImage.css">
 </head>
-<script src = "/scripts/addImage.js"></script>
+<script src="/scripts/addImage.js"></script>
 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <fieldset>
@@ -45,29 +48,26 @@
 
                 <div class="form-group">
                     <label for="Price" class="col-sm-5 col-lg-3 control-label">Cena</label>
-                    <div class="col-sm-7 col-lg-9" >
+                    <div class="col-sm-7 col-lg-9">
                         @Html.TextBoxFor(m => m.Price,
                         new { @class = "form-control", placeholder = "1234567890", Type = "number", min = "0" })
                     </div>
-                    
+
                 </div>
 
 
-                  
-                        <div class="form-group">
-                            <label for="BookImage" class="col-sm-5 col-lg-3 control-label">Zdjęcie</label>
-                            <div class="col-sm-7 col-lg-9">
-                                <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <span class="btn btn-default btn-file">
-                                            Wyberz <input type="file" id="imgInp" for="BookImage" name="BookImage">
-                                        </span>
-                                    </span>
-                                    <input type="text" class="form-control" readonly>
-                                </div>
 
-                                <img id='img-upload' />
-                            </div>
+                <div class="form-group">
+                    <label for="BookImage" class="col-sm-5 col-lg-3 control-label">Zdjęcie</label>
+                    <div class="col-sm-7 col-lg-9">
+                        <div class="input-group">
+
+
+                            <input name="files[]" type="file" multiple="multiple" id="our-test" class="multi with-preview" accept="gif|jpg|png|jpeg" />
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -83,7 +83,7 @@
                     <label for="changeable" class="col-sm-5 col-lg-9 control-label">Czy chcesz wymienić się na inną książkę?</label>
 
                     <div class="btn-group btn-toggle">
-                        <label>@Html.RadioButtonFor(i => i.Changeable, true, new { @class = "btn btn-sm btn-default", Checked="checked" })Tak</label>
+                        <label>@Html.RadioButtonFor(i => i.Changeable, true, new { @class = "btn btn-sm btn-default", Checked = "checked" })Tak</label>
                         <label>@Html.RadioButtonFor(i => i.Changeable, false, new { @class = "btn btn-sm btn-default" })Nie</label>
                     </div>
                 </div>
@@ -102,22 +102,108 @@
                     <label for="PublicationDate" class="col-sm-5 col-lg-3 control-label">Data wydania</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextBoxFor(m => m.PublicationDate,
-                        new { @class = "form-control", Type = "date"})
+                        new { @class = "form-control", Type = "date" })
                     </div>
                 </div>
 
+
+                <h2>Opcje dostawy</h2>
+                <h4>Wybierz sposób dostawy który będzie dla Ciebie najlepszy.</h4>
+
+
+
+                <br />
+                <div class="form-group">
+                    <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
+                        @Html.CheckBox("deliveryBool1", false) Odbiór osobisty
+                    </label>
+                    <div id="1t" class="col-sm-5 col-lg-3" style="display: none">
+                        @Html.TextBoxFor(m => m.DeliveryPrice,
+                            new { @class = "form-control", Type = "number", min = "0", Value = "0" })
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <br />
+                    <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
+                       @Html.CheckBox("deliveryBool2", false) Przesyłka pocztowa - priorytetowa
+                    </label>
+                    <div id="2t" class="col-sm-5 col-lg-3" style="display: none">
+                        @Html.TextBoxFor(m => m.DeliveryPrice,
+                        new { @class = "form-control", Type = "number", min = "0", Value = "15" })
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <br />
+                    <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
+                        @Html.CheckBox("deliveryBool3", false) Przesyłka pocztowa - ekonomiczna
+                    </label>
+                    <div id="3t" class="col-sm-5 col-lg-3" style="display: none">
+                        @Html.TextBoxFor(m => m.DeliveryPrice,
+                        new { @class = "form-control", Type = "number", min = "0", Value = "10" })
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <br />
+                    <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
+                        @Html.CheckBox("deliveryBool4", false) Przesyłka kurierska
+                    </label>
+                    <div id="4t" class="col-sm-5 col-lg-3" style="display: none">
+                        @Html.TextBoxFor(m => m.DeliveryPrice,
+                        new { @class = "form-control", Type = "number", min = "0", Value = "12" })
+                    </div>
+                </div>
+                <br />
+                <br />
 
                 <div class="col-sm-offset-5 col-sm-2">
                     <button type="submit" class="btn btn-default">Wystaw</button>
                 </div>
 
 
-
             </form>
         </div>
     </fieldset>
+
+
 
     @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 }
 
 
+<script>
+    $(function () {
+        $('input[name="deliveryBool1"]').on('click', function () {
+            if ($(this).val() == 'true') {
+                $('#1t').show();
+            } else{
+                $('#1t').hide();
+            }
+        });
+        $('input[name="deliveryBool2"]').on('click', function () {
+            if ($(this).val() == 'true') {
+                $('#2t').show();
+            } else {
+                $('#2t').hide();
+            }
+        });
+        $('input[name="deliveryBool3"]').on('click', function () {
+            if ($(this).val() == 'true') {
+                $('#3t').show();
+            } else {
+                $('#3t').hide();
+            }
+        });
+        $('input[name="deliveryBool4"]').on('click', function () {
+            if ($(this).val() == 'true') {
+                $('#4t').show();
+            } else {
+                $('#4t').hide();
+            }
+        });
+        
+    });
+
+</script>

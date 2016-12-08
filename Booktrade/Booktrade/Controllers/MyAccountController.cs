@@ -19,6 +19,7 @@ namespace Booktrade.Controllers
     public class MyAccountController : Controller
     {
         private readonly UserManager<AppUser> userManager;
+        
 
         public MyAccountController() : this(Startup.UserManagerFactory.Invoke())
         {
@@ -45,13 +46,16 @@ namespace Booktrade.Controllers
         [HttpGet]
         public ActionResult AddBooks()
         {
+            
             return View();
         }
 
         [HttpPost]
-        public ActionResult AddBooks(SellBookModel model)
+        public ActionResult AddBooks(SellBookModel model, bool deliveryBool1, bool deliveryBool2, bool deliveryBool3, bool deliveryBool4)
         {
-
+            List<bool> CheckList = new List<bool> { deliveryBool1, deliveryBool2, deliveryBool3, deliveryBool4 };
+            
+       
             if (!ModelState.IsValid)
             {
                 List<string> errors = new List<string>();
@@ -64,32 +68,16 @@ namespace Booktrade.Controllers
                         errors.Add(errorMessage);
                     }
                 }
-                foreach(string error in errors)
+                foreach (string error in errors)
                 {
                     ModelState.AddModelError("", error);
                 }
-                
+
                 return View();
             }
             var context = new AppDbContext();
 
 
-            byte[] uploadedFile = null;
-            if (model.BookImage != null)
-            {
-                uploadedFile = new byte[model.BookImage.InputStream.Length];
-                model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
-
-                //próba skalowania obrazu
-                //Image image = Image.FromStream(new MemoryStream(uploadedFile));
-                //Image newImage;
-                //newImage = ScaleImage(image, 300, 150);
-                //var ms = new MemoryStream();
-                //newImage.Save(ms, ImageFormat.Gif);
-                //ms.ToArray();
-                //uploadedFile = ms.ToArray();
-                //model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
-            }
             if (model.Price == null)
             {
                 model.Price = 0;
@@ -104,15 +92,95 @@ namespace Booktrade.Controllers
                 AddDate = DateTime.Now,
                 Price = model.Price,
                 Publisher = model.Publisher,
-                Changeable= model.Changeable,
+                Changeable = model.Changeable,
                 PublicationDate = model.PublicationDate,
-                BookImage = uploadedFile,
                 SellerId = System.Web.HttpContext.Current.User.Identity.GetUserId(),
                 Seller = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()),
-        };
-                context.Books.Add(book);
-                context.SaveChanges();
+                
+            };
+            context.Books.Add(book);
+            context.SaveChanges();
 
+            if(deliveryBool1 == true)
+            {
+                var delivery = new Delivery
+                {
+                    Name = "Odbiór osobisty",
+                    Price = model.DeliveryPrice[0],
+                    DeliveryPriceId = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault().BookId,
+                    DeliveryPrices = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault()
+                };
+                context.DeliveryOptions.Add(delivery);
+                context.SaveChanges();
+            }
+            if (deliveryBool2 == true)
+            {
+                var delivery = new Delivery
+                {
+                    Name = "Przesyłka pocztowa - priorytetowa",
+                    Price = model.DeliveryPrice[1],
+                    DeliveryPriceId = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault().BookId,
+                    DeliveryPrices = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault()
+                };
+                context.DeliveryOptions.Add(delivery);
+                context.SaveChanges();
+            }
+                
+            
+            if (deliveryBool3 == true)
+            {
+                var delivery = new Delivery
+                {
+                    Name = "Przesyłka pocztowa - ekonomiczna",
+                    Price = model.DeliveryPrice[2],
+                    DeliveryPriceId = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault().BookId,
+                    DeliveryPrices = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault()
+                };
+                context.DeliveryOptions.Add(delivery);
+                context.SaveChanges();
+            }
+            if (deliveryBool4 == true)
+            {
+                var delivery = new Delivery
+                {
+                    Name = "Przesyłka kurierska",
+                    Price = model.DeliveryPrice[3],
+                    DeliveryPriceId = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault().BookId,
+                    DeliveryPrices = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault()
+                };
+                context.DeliveryOptions.Add(delivery);
+                context.SaveChanges();
+            }
+
+
+            byte[] uploadedFile = null;
+            BookImage bookImage = null;
+            if (Request.Files != null)
+            {
+                foreach (string image in Request.Files)
+                {
+                    HttpPostedFileBase hpf = Request.Files[image] as HttpPostedFileBase;
+                    uploadedFile = new byte[hpf.InputStream.Length];
+                    hpf.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
+                    bookImage = new BookImage { Image = uploadedFile, BookImgId = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault().BookId, BookImg = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault() };
+                    Debug.WriteLine(bookImage.ImageId.ToString());
+                    context.BookImages.Add(bookImage);
+                    context.SaveChanges();
+                }
+
+
+
+
+                //próba skalowania obrazu
+                //Image image = Image.FromStream(new MemoryStream(uploadedFile));
+                //Image newImage;
+                //newImage = ScaleImage(image, 300, 150);
+                //var ms = new MemoryStream();
+                //newImage.Save(ms, ImageFormat.Gif);
+                //ms.ToArray();
+                //uploadedFile = ms.ToArray();
+                //model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
+            }
 
             return RedirectToAction("index", "home");
         }
@@ -142,7 +210,7 @@ namespace Booktrade.Controllers
             AppUser user = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
             SettingsViewModel settings = new SettingsViewModel()
             {
-                SettingsModel=new UserSettingsModel()
+                SettingsModel = new UserSettingsModel()
                 {
                     Address = user.Address,
                     BankAccount = user.BankNumber,
@@ -152,7 +220,7 @@ namespace Booktrade.Controllers
                     Surname = user.Surname,
                     Province = user.Province
                 }
-                
+
             };
             if (errMsg != null)
             {
@@ -233,7 +301,7 @@ namespace Booktrade.Controllers
             else
             {
                 TempData["ErrorMessage"] = "Nie udało się zmienić hasła.";
-                return RedirectToAction("Settings", "MyAccount", new { model=model });
+                return RedirectToAction("Settings", "MyAccount", new { model = model });
             }
         }
     }

@@ -186,7 +186,6 @@
     <Content Include="Images\books2.jpg" />
     <Content Include="Images\books3.jpg" />
     <Content Include="Images\noFoto.png" />
-    <Content Include="scripts\addImage.js" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -225,9 +224,12 @@
     <Content Include="scripts\bootstrap.min.js" />
     <Content Include="scripts\jquery-1.10.2.js" />
     <Content Include="scripts\jquery-1.10.2.min.js" />
+    <Content Include="scripts\jquery.form.js" />
     <Content Include="scripts\jquery.js" />
+    <Content Include="scripts\jquery.MetaData.js" />
+    <Content Include="scripts\jquery.MultiFile.js" />
+    <Content Include="scripts\jQuery.MultiFile.min.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
-    <Content Include="scripts\showImage.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -253,6 +255,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\MySqlHistoryContext.cs" />
     <Compile Include="Models\Book.cs" />
+    <Compile Include="Models\BookImage.cs" />
+    <Compile Include="Models\Delivery.cs" />
     <Compile Include="MySqlInitializer.cs" />
     <Compile Include="ViewModels\LogInModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
