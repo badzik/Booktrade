@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNet.Identity
+@using Booktrade.Controllers;
+@model Booktrade.ViewModels.ConversationPreviewsModel
+
+@{
+    ViewBag.Title = "Messages";
+}
+
+<h2>Wiadomości</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <table class="table">
+                    <tbody>
+                        @{
+                            string timePassed;
+                            string text;
+                            foreach (var m in Model.Conversations)
+                            {
+                                timePassed = MessageController.CalculateMessageTime(m.LastMessage.SendDate);
+                                text = m.LastMessage.Text;
+                                if (m.LastMessage.Text.Length > 100)
+                                {
+                                    text = text.Substring(0, 100) + "...";
+                                }
+                                <tr @{if (!m.LastMessage.isRead && m.LastMessage.ReceiverId == CurrentUser.Identity.GetUserId())
+                                    { <text> style="background-color:#ade6f4" </text>    } }>
+                                    <td style="width:80%">
+                                        <strong>
+                                            <a href="#">@m.Interlocutor.UserName</a>
+                                        </strong><br>
+                                        <span>
+                                            <a href="@Url.Action("conversation", "message", new { interlocutorEmail = m.Interlocutor.Email })">@text</a>
+                                        </span>
+                                    </td>
+                                    <td style="width:20%">
+                                        <span>@timePassed</span>
+                                    </td>
+                                </tr>
+                             }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

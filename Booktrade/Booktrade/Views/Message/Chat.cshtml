@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNet.Identity
+@using Booktrade.Controllers;
+@model ICollection<Booktrade.Models.Message>
+
+<div class="panel-body">
+    <ul class="chat">
+        @{
+            string time = "12 minut temu";
+            foreach (Booktrade.Models.Message m in Model)
+            {
+                time=MessageController.CalculateMessageTime(m.SendDate);
+                if (m.Receiver.Id == CurrentUser.Identity.GetUserId())
+                {
+                    <li class="left clearfix">
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font">@m.Sender.UserName</strong> <small class="pull-right text-muted">
+                                    <span class="glyphicon glyphicon-time"></span>@time
+                                </small>
+                            </div>
+                            <p>
+                                @m.Text
+                            </p>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="right clearfix">
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>@time</small>
+                                <strong class="pull-right primary-font">@m.Sender.UserName</strong>
+                            </div>
+                            <p align="right">
+                                @m.Text
+                            </p>
+                        </div>
+                    </li>
+                }
+
+            }
+        }
+    </ul>
+</div>
