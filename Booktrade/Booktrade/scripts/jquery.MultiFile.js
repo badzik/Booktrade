@@ -464,7 +464,7 @@ if (window.jQuery)(function ($) {
 								label =	$(
 										(
 											'<span class="MultiFile-label" title="' + t + '">'+
-												'<span class="MultiFile-title">'+ n +'</span>'+
+												'<span class="MultiFile-title"></span>'+
 												(MultiFile.preview || $(slave).is('.with-preview') ? p : '' )+
 											'</span>'
 										)

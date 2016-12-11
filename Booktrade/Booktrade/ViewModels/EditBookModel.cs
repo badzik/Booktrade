@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace Booktrade.ViewModels
 {
-    public class SellBookModel
+    public class EditBookModel
     {
+
         [Required]
         [StringLength(50)]
         [Display(Name = "Tytuł")]
@@ -34,7 +33,7 @@ namespace Booktrade.ViewModels
         [Display(Name = "Cena")]
         public float? Price { get; set; }
         [Display(Name = "Zdjęcie")]
-        public IEnumerable<HttpPostedFileBase> BookImages { get; set; }
+        public IEnumerable<string> BookImages { get; set; }
         public AppUser Seller { get; set; }
 
         //DELIVERY

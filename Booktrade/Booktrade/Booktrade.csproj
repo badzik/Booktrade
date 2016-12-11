@@ -186,6 +186,7 @@
     <Content Include="Images\books2.jpg" />
     <Content Include="Images\books3.jpg" />
     <Content Include="Images\noFoto.png" />
+    <Content Include="scripts\addImage.js" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -230,6 +231,7 @@
     <Content Include="scripts\jquery.MultiFile.js" />
     <Content Include="scripts\jQuery.MultiFile.min.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
+    <Content Include="scripts\showImage.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -263,6 +265,7 @@
     <Compile Include="ViewModels\ConversationModel.cs" />
     <Compile Include="ViewModels\ConversationPreviewModel.cs" />
     <Compile Include="ViewModels\ConversationPreviewsModel.cs" />
+    <Compile Include="ViewModels\EditBookModel.cs" />
     <Compile Include="ViewModels\LogInModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -287,7 +290,7 @@
     <Content Include="scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Auth\Register.cshtml" />
     <Content Include="Views\MyAccount\MyBooks.cshtml" />
-    <Content Include="Views\MyAccount\AddBooks.cshtml" />
+    <Content Include="Views\MyAccount\AddBook.cshtml" />
     <Content Include="Views\Auth\PasswordRecovery.cshtml" />
     <Content Include="Views\Auth\PasswordChangeRecovery.cshtml" />
     <Content Include="Views\Info\Information.cshtml" />
@@ -296,6 +299,7 @@
     <Content Include="Views\Message\Messages.cshtml" />
     <Content Include="Views\Message\Conversation.cshtml" />
     <Content Include="Views\Message\Chat.cshtml" />
+    <Content Include="Views\MyAccount\EditBook.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

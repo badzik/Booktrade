@@ -1,29 +1,54 @@
-﻿@model Booktrade.Models.Book
+﻿@model ICollection<Booktrade.Models.Book>
 
 @{
     ViewBag.Title = "MyBooks";
 }
 
-@using (var context = new Booktrade.AppDbContext())
-{
-    var xx = context.Books.ToList();
-    if (xx != null)
+    @if(Model !=null)
     {
-        <ul class="list-group">
-            @foreach (var book in xx)
-            {
-                <li class="list-group-item clearfix">
-                    @book.Title
-                    <div class="pull-right">
-                        <a href="#" class="btn btn-primary">Edytuj</a>
-                        <a href="#" class="btn btn-danger">Usuń</a>
-                    </div>
-                </li>
-            }
-        </ul>
+            <legend></legend>
+            <div class="container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Data dodania</th>
+                            <th>Nazwa książki</th>
+                            <th>Cena</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var book in Model)
+                        {
 
+                            string imageSrc = "/Images/noFoto.png";
+                            if (book.ImagesForBook.FirstOrDefault() != null)
+                            {
+                                var firstImage = book.ImagesForBook.First();
+                                string imageBase64 = Convert.ToBase64String(firstImage.Image);
+                                imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                            }
+                            <tr>
+                                <td><img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';" style="width:50px; height:50px" />  @book.AddDate</td>
+                                <td>@book.Author - @book.Title</td>
+                                <td>@book.Price zł.</td>
+                                <td>
+                                    <div class="pull-right">
+                                        <a class="btn btn-primary" @Html.ActionLink("Edytuj", "EditBook", "MyAccount", new { bookId = book.BookId }, null)
+                                        <a href="#" class="btn btn-danger">Usuń</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+    }else
+    {
+        <h2>Obecnie nic nie sprzedajesz ;( )</h2>
     }
-    <form action="/MyAccount/AddBooks">
-        <input class="btn btn-default" type="submit" value="Dodaj książkę" />
-    </form>
-}
+        <form action="/MyAccount/AddBook">
+            <input class="btn btn-default" type="submit" value="Dodaj książkę" />
+        </form>
+
+

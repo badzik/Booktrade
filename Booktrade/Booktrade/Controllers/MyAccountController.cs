@@ -19,7 +19,7 @@ namespace Booktrade.Controllers
     public class MyAccountController : Controller
     {
         private readonly UserManager<AppUser> userManager;
-        
+
 
         public MyAccountController() : this(Startup.UserManagerFactory.Invoke())
         {
@@ -35,7 +35,9 @@ namespace Booktrade.Controllers
         [HttpGet]
         public ActionResult MyBooks()
         {
-            return View();
+            var context = new AppDbContext();
+            ICollection<Book> model = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).SellingBooks;
+            return View(model);
         }
         //[HttpPost]
         //public async Task<ActionResult> MyAccount(RegisterModel model)
@@ -44,18 +46,18 @@ namespace Booktrade.Controllers
         //}
 
         [HttpGet]
-        public ActionResult AddBooks()
+        public ActionResult AddBook()
         {
-            
+
             return View();
         }
 
         [HttpPost]
-        public ActionResult AddBooks(SellBookModel model, bool deliveryBool1, bool deliveryBool2, bool deliveryBool3, bool deliveryBool4)
+        public ActionResult AddBook(SellBookModel model, bool deliveryBool1, bool deliveryBool2, bool deliveryBool3, bool deliveryBool4)
         {
             List<bool> CheckList = new List<bool> { deliveryBool1, deliveryBool2, deliveryBool3, deliveryBool4 };
-            
-       
+
+
             if (!ModelState.IsValid)
             {
                 List<string> errors = new List<string>();
@@ -96,13 +98,14 @@ namespace Booktrade.Controllers
                 PublicationDate = model.PublicationDate,
                 SellerId = System.Web.HttpContext.Current.User.Identity.GetUserId(),
                 Seller = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()),
-                
+
             };
             context.Books.Add(book);
             context.SaveChanges();
-
-            if(deliveryBool1 == true)
+            bool checkDelivery = false;
+            if (deliveryBool1 == true)
             {
+                checkDelivery = true;
                 var delivery = new Delivery
                 {
                     Name = "Odbiór osobisty",
@@ -115,6 +118,7 @@ namespace Booktrade.Controllers
             }
             if (deliveryBool2 == true)
             {
+                checkDelivery = true;
                 var delivery = new Delivery
                 {
                     Name = "Przesyłka pocztowa - priorytetowa",
@@ -125,10 +129,11 @@ namespace Booktrade.Controllers
                 context.DeliveryOptions.Add(delivery);
                 context.SaveChanges();
             }
-                
-            
+
+
             if (deliveryBool3 == true)
             {
+                checkDelivery = true;
                 var delivery = new Delivery
                 {
                     Name = "Przesyłka pocztowa - ekonomiczna",
@@ -141,6 +146,7 @@ namespace Booktrade.Controllers
             }
             if (deliveryBool4 == true)
             {
+                checkDelivery = true;
                 var delivery = new Delivery
                 {
                     Name = "Przesyłka kurierska",
@@ -153,6 +159,12 @@ namespace Booktrade.Controllers
             }
 
 
+            if (!checkDelivery)
+            {
+                ModelState.AddModelError("", "Proszę wybrać opcję dostawy");
+                return View();
+            }
+
             byte[] uploadedFile = null;
             BookImage bookImage = null;
             if (Request.Files != null)
@@ -163,7 +175,6 @@ namespace Booktrade.Controllers
                     uploadedFile = new byte[hpf.InputStream.Length];
                     hpf.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
                     bookImage = new BookImage { Image = uploadedFile, BookImgId = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault().BookId, BookImg = context.Books.OrderByDescending(o => o.BookId).FirstOrDefault() };
-                    Debug.WriteLine(bookImage.ImageId.ToString());
                     context.BookImages.Add(bookImage);
                     context.SaveChanges();
                 }
@@ -184,6 +195,60 @@ namespace Booktrade.Controllers
 
             return RedirectToAction("index", "home");
         }
+
+        [HttpGet]
+        public ActionResult EditBook(int bookId)
+        {
+            var context = new AppDbContext();
+            Book book = context.Books.Find(bookId);
+            var errMsg = TempData["ErrorMessage"] as string;
+            List<string> bookImages = new List<string>();
+            foreach (BookImage b in book.ImagesForBook)
+            {
+                string imageSrc = "/Images/noFoto.png";
+
+                    var firstImage = b;
+                    string imageBase64 = Convert.ToBase64String(firstImage.Image);
+                    imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                Debug.WriteLine(imageSrc);
+                bookImages.Add(imageSrc);
+            }
+            List<float> deliveryPrices = new List<float>();
+            List<string> deliveryNames = new List<string>();
+            foreach (var d in book.DeliveryforBook)
+            {
+                deliveryPrices.Add(d.Price);
+                deliveryNames.Add(d.Name);
+            }
+            var editBook = new EditBookModel
+            {
+                Author = book.Author,
+                Title = book.Title,
+                Genre = book.Genre,
+                Description = book.Description,
+                //BookImages = ;
+                Price = book.Price,
+                Publisher = book.Publisher,
+                Changeable = book.Changeable,
+                PublicationDate = book.PublicationDate,
+                BookImages = bookImages,
+                Seller = book.Seller,
+                DeliveryName = deliveryNames,
+                DeliveryPrice = deliveryPrices
+            };
+
+
+            if (errMsg != null)
+            {
+                ModelState.AddModelError("", errMsg);
+            }
+
+            return View(editBook);
+        }
+
+
+
+
 
         public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
         {
