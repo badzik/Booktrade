@@ -1,16 +1,14 @@
-﻿@model Booktrade.Models.Book
+﻿@model ICollection<Booktrade.Models.Book>
 
 @{
     ViewBag.Title = "MyBooks";
 }
 
-@using (var context = new Booktrade.AppDbContext())
-{
-    var xx = context.Books.ToList();
-    if (xx != null)
+@{
+    if (Model != null)
     {
         <ul class="list-group">
-            @foreach (var book in xx)
+            @foreach (var book in Model)
             {
                 <li class="list-group-item clearfix">
                     @book.Title

@@ -38,6 +38,10 @@ namespace Booktrade.Controllers
             {
                 temp = "Wystąpił problem podczas wysyłania wiadomości";
             }
+            if (text == "Error")
+            {
+                temp = "Wystąpił błąd";
+            }
             return View((object)temp);
         }
     }

@@ -34,7 +34,9 @@ namespace Booktrade.Controllers
         [HttpGet]
         public ActionResult MyBooks()
         {
-            return View();
+            var context = new AppDbContext();
+            ICollection<Book> model=context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).SellingBooks;
+            return View(model);
         }
         //[HttpPost]
         //public async Task<ActionResult> MyAccount(RegisterModel model)

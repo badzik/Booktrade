@@ -37,6 +37,6 @@ namespace Booktrade.Models
         
         public virtual AppUser Buyer { get; set; }
 
-
+        public ICollection<ExchangeMessage> ExchangeMessages { get; set; }
     }
 }

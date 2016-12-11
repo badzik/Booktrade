@@ -27,5 +27,10 @@ namespace Booktrade
         public virtual ICollection<Message> SentMessages { get; set; }
         [InverseProperty("Receiver")]
         public virtual ICollection<Message> ReceivedMessages { get; set; }
+
+        [InverseProperty("Sender")]
+        public virtual ICollection<ExchangeMessage> SentExchangeMessages { get; set; }
+        [InverseProperty("Receiver")]
+        public virtual ICollection<ExchangeMessage> ReceivedExchangeMessages { get; set; }
     }
 }

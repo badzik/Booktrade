@@ -1,0 +1,184 @@
+﻿@model Booktrade.ViewModels.PropositionsModel
+@using System.ComponentModel
+@{
+    ViewBag.Title = "Propozycje";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item active">
+                        <a class="nav-link active" data-toggle="tab" href="#received" role="tab">Otrzymane</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#sent" role="tab">Wysłane</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="received" role="tabpanel">
+                        @{
+                            if (Model.ReceivedPropositions.Count != 0)
+                            {
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Od</th>
+                                            <th>Proponuje</th>
+                                            <th>Za</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var p in Model.ReceivedPropositions)
+                                        {
+                                            <tr>
+                                                <td>@p.Sender.UserName</td>
+                                                <td>@string.Join(",", p.ProposedBooks.Select(book => book.Title).ToList()) </td>
+                                                <td>@p.ForBook.Title</td>
+                                                <td rowspan="2" align="center" style="vertical-align:middle;border-bottom: 3px solid"><a data-toggle="modal" data-id="@p.ExchangeMessageId" class="open-agreeDialog btn btn-primary" data-target="#agreeModal">Przyjmij</a></td>
+                                                <td rowspan="2" align="center" style="vertical-align:middle;border-bottom: 3px solid"><a data-toggle="modal" data-id="@p.ExchangeMessageId" class="open-disagreeDialog btn btn-danger" data-target="#disagreeModal">Odrzuć</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" style="border-bottom: 3px solid"><strong>Wiadomość: </strong>@p.Text</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>Brak propozycji</p>
+                            }
+                        }
+                    </div>
+                    <div class="tab-pane" id="sent" role="tabpanel">
+                        @{
+                            if (Model.SentPropositions.Count != 0)
+                            {
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Do</th>
+                                            <th>Proponujesz</th>
+                                            <th>Za</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var p in Model.SentPropositions)
+                                        {
+                                            <tr>
+                                                <td>@p.Receiver.UserName</td>
+                                                <td>@string.Join(",", p.ProposedBooks.Select(book => book.Title).ToList()) </td>
+                                                <td>@p.ForBook.Title</td>
+                                                <td rowspan="2" align="center" style="vertical-align:middle;border-bottom: 3px solid"><a data-toggle="modal" data-id="@p.ExchangeMessageId" class="open-cancelDialog btn btn-danger" data-target="#cancelModal">Anuluj</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" style="border-bottom: 3px solid"><strong>Wiadomość: </strong>@p.Text</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>Nie wysłano żadnych propozycji wymiany</p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="agreeModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Potwierdzenie</h4>
+            </div>
+            <div class="modal-body">
+                <p>Czy na pewno chcesz przyjąć tą propozycję?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                <a href="#" class="btn btn-primary" id="agreeLink">Przyjmij</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="disagreeModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Potwierdzenie</h4>
+            </div>
+            <div class="modal-body">
+                <p>Czy na pewno chcesz odrzucić tą propozycję?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                <a href="#" class="btn btn-primary" id="disagreeLink">Odrzuć</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cancelModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Potwierdzenie</h4>
+            </div>
+            <div class="modal-body">
+                <p>Czy na pewno chcesz wycofać swoją propozycję?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                <a href="#" class="btn btn-primary" id="cancelLink">Tak</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#myTab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    });
+
+
+    $('.open-agreeDialog').click(function(e){
+        var exchangeId = $(this).data('id');
+        var link = "/transaction/AcceptProposition?propositionId=" + exchangeId;
+        $("#agreeLink").attr("href", link);
+    });
+
+    $('.open-disagreeDialog').click(function (e) {
+        var exchangeId = $(this).data('id');
+        var link = "/transaction/DeclineProposition?propositionId=" + exchangeId;
+        $("#disagreeLink").attr("href", link);
+    });
+
+    $('.open-cancelDialog').click(function (e) {
+        var exchangeId = $(this).data('id');
+        var link = "/transaction/CancelProposition?propositionId=" + exchangeId;
+        $("#cancelLink").attr("href", link);
+    });
+
+</script>
