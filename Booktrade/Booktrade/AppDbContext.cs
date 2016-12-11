@@ -13,6 +13,9 @@ namespace Booktrade
     {
         public DbSet<Book> Books { get; set; }
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<BookImage> BookImages { get; set; }
+        public DbSet<Delivery> DeliveryOptions { get; set; }
         public DbSet<ExchangeMessage> ExchangeMessages { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public AppDbContext()
