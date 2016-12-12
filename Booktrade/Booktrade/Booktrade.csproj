@@ -304,9 +304,9 @@
     <Content Include="Views\Message\Messages.cshtml" />
     <Content Include="Views\Message\Conversation.cshtml" />
     <Content Include="Views\Message\Chat.cshtml" />
-    <Content Include="Views\MyAccount\EditBook.cshtml" />
     <Content Include="Views\Transaction\Proposition.cshtml" />
     <Content Include="Views\Transaction\Propositions.cshtml" />
+    <Content Include="Views\MyAccount\EditBook.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
