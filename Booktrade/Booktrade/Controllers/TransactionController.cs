@@ -24,6 +24,10 @@ namespace Booktrade.Controllers
             {
                 return RedirectToAction("Information", "Info", new { text = "AccessDenied" });
             }
+            if(model.Interested.Seller.Id== System.Web.HttpContext.Current.User.Identity.GetUserId())
+            {
+                return RedirectToAction("Information", "Info", new { text = "Error" });
+            }
             return View(model);
         }
         [HttpPost]
@@ -48,7 +52,7 @@ namespace Booktrade.Controllers
                 {
                     proposedBooks.Add(context.Books.Find(Int32.Parse(id)));
                 }
-                if (interested != null)
+                if (interested != null && interested.Changeable)
                 {
                     ExchangeMessage eMessage = new ExchangeMessage()
                     {
@@ -68,7 +72,7 @@ namespace Booktrade.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Information", "Info", new { text = "AccessDenied" });
+                    return RedirectToAction("Information", "Info", new { text = "Error" });
                 }
 
             }
