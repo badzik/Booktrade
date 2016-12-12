@@ -8,7 +8,8 @@ namespace Booktrade.ViewModels
 {
     public class EditBookModel
     {
-
+        [Required]
+        public int Id { get; set; }
         [Required]
         [StringLength(50)]
         [Display(Name = "Tytuł")]

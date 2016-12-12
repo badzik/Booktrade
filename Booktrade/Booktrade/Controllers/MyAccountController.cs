@@ -222,6 +222,7 @@ namespace Booktrade.Controllers
             }
             var editBook = new EditBookModel
             {
+                Id = bookId,
                 Author = book.Author,
                 Title = book.Title,
                 Genre = book.Genre,
