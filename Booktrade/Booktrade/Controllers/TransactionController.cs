@@ -111,11 +111,54 @@ namespace Booktrade.Controllers
             ExchangeMessage eMessage = context.ExchangeMessages.Find(id);
             Transaction transaction;
             Book book = context.Books.Find(eMessage.BookId);
+            ICollection<ExchangeMessage> allReceivedExMessages = eMessage.Sender.ReceivedExchangeMessages;
+            ICollection<ExchangeMessage> allSentExMesssages = eMessage.Sender.SentExchangeMessages;
             if (currentUser != null && eMessage != null && eMessage.ReceiverId == currentUser.Id)
             {
                 eMessage.Accepted = true;
                 book.isChanged = true;
+                book.Buyer = eMessage.Sender;
+                book.BuyerId = eMessage.SenderId;
                 foreach (Book b in eMessage.ProposedBooks) b.isChanged = true;
+
+
+                //deleting propositions related to changed book
+                foreach(ExchangeMessage e in currentUser.ReceivedExchangeMessages.ToList())
+                {
+                    if (e.BookId == book.BookId && e.ExchangeMessageId!=eMessage.ExchangeMessageId)
+                    {
+                        context.ExchangeMessages.Remove(e);
+                    }
+                }
+                foreach (ExchangeMessage e in currentUser.SentExchangeMessages.ToList())
+                {
+                    if (e.ProposedBooks.Contains(book))
+                    {
+                        context.ExchangeMessages.Remove(e);
+                    }
+                }
+
+
+                //deleting propositions related to proposed books by other user
+                foreach (ExchangeMessage e in allReceivedExMessages.ToList())
+                {
+                    if (eMessage.ProposedBooks.Any(x => x.BookId == e.BookId))
+                    {
+                        context.ExchangeMessages.Remove(e);
+                    }
+                }
+                foreach(ExchangeMessage e in allSentExMesssages.ToList())
+                {
+                    foreach(Book b in eMessage.ProposedBooks)
+                    {
+                        if (e.ProposedBooks.Contains(b) && e.ExchangeMessageId!=eMessage.ExchangeMessageId)
+                        {
+                            context.ExchangeMessages.Remove(e);
+                        }
+                    }
+                }
+
+
                 transaction = new Transaction()
                 {
                     Exchanged = true,
