@@ -24,13 +24,17 @@ namespace Booktrade.Models
         public int BookId { get; set; }
         [ForeignKey("ExMessage")]
         public int ExchangeMessageId { get; set; }
+        [ForeignKey("SelectedDelivery")]
+        public int DeliveryId { get; set; }
+
 
         public virtual AppUser Seller { get; set; }
         public virtual AppUser Buyer { get; set; }
         public virtual Book SoldBook { get; set; }
         public virtual ExchangeMessage ExMessage { get; set; }
-
-
+        public virtual Delivery SelectedDelivery { get; set; }
+        public virtual Comment FromSellerComment { get; set; }
+        public virtual Comment FromBuyerComment { get; set; }
 
     }
 }

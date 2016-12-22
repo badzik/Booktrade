@@ -260,6 +260,7 @@
     <Compile Include="Migrations\MySqlHistoryContext.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\BookImage.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Delivery.cs" />
     <Compile Include="Models\ExchangeMessage.cs" />
     <Compile Include="Models\Message.cs" />
