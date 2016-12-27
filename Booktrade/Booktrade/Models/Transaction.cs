@@ -25,7 +25,7 @@ namespace Booktrade.Models
         [ForeignKey("ExMessage")]
         public int ExchangeMessageId { get; set; }
         [ForeignKey("SelectedDelivery")]
-        public int DeliveryId { get; set; }
+        public int? DeliveryId { get; set; }
 
 
         public virtual AppUser Seller { get; set; }
