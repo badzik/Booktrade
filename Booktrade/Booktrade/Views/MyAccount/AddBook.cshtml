@@ -9,6 +9,7 @@
     <script src='~/scripts/jquery.MetaData.js' type="text/javascript" language="javascript"></script>
     <script src='~/scripts/jQuery.MultiFile.js' type="text/javascript" language="javascript"></script>
     <script src="~/scripts/showImage.js"></script>
+    <script src="~/scripts/AddBook.js"></script>
     <style>
         .form-group > * {
             margin-bottom: 10px;
@@ -80,7 +81,7 @@
                         <div class="input-group">
                             @*<span class="input-group-btn">*@
                                 <span class="col-sm-7 col-lg-12 btn btn-default btn-file">
-                                    Wybierz więcej zdjęć (maks 3)<input name="files[]" type="file" multiple="multiple" id="our-test" class="multi with-preview" accept="gif|jpg|png|jpeg" maxlength="3" data-maxsize="2048"/>
+                                    Wybierz więcej zdjęć (maks 3)<input name="files" type="file" multiple id="our-test" class="multi with-preview" accept="gif|jpg|png|jpeg" maxlength="3" data-maxsize="2048"/>
                                 </span>
                             <input type="text" class="form-control" readonly style="visibility:hidden">
                             @*</span>*@
@@ -186,42 +187,7 @@
     </fieldset>
 
 
-
     @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 }
 
 
-<script>
-    $(function () {
-        $('input[name="deliveryBool1"]').on('click', function () {
-            if ($(this).val() == 'true') {
-                $('#1t').show();
-            } else {
-                $('#1t').hide();
-            }
-        });
-        $('input[name="deliveryBool2"]').on('click', function () {
-            if ($(this).val() == 'true') {
-                $('#2t').show();
-            } else {
-                $('#2t').hide();
-            }
-        });
-        $('input[name="deliveryBool3"]').on('click', function () {
-            if ($(this).val() == 'true') {
-                $('#3t').show();
-            } else {
-                $('#3t').hide();
-            }
-        });
-        $('input[name="deliveryBool4"]').on('click', function () {
-            if ($(this).val() == 'true') {
-                $('#4t').show();
-            } else {
-                $('#4t').hide();
-            }
-        });
-
-    });
-
-</script>

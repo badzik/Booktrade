@@ -2,6 +2,34 @@
 <html>
 <head>
     <link href="~/Content/shop-homepage.css" rel="stylesheet" type="text/css" />
+    <script>
+        $(document).ready(function () {
+            $('.story-small').each(function () {
+                var maxWidth = 300; // Max width for the image
+                var maxHeight = 150;    // Max height for the image
+                var ratio = 0;  // Used for aspect ratio
+                var width = $(this).width();    // Current image width
+                var height = $(this).height();  // Current image height
+
+                // Check if the current width is larger than the max
+                if (width > maxWidth) {
+                    ratio = maxWidth / width;   // get ratio for scaling image
+                    $(this).css("width", maxWidth); // Set new width
+                    $(this).css("height", height * ratio);  // Scale height based on ratio
+                    height = height * ratio;    // Reset height to match scaled image
+                    width = width * ratio;    // Reset width to match scaled image
+                }
+
+                // Check if current height is larger than max
+                if (height > maxHeight) {
+                    ratio = maxHeight / height; // get ratio for scaling image
+                    $(this).css("height", maxHeight);   // Set new height
+                    $(this).css("width", width * ratio);    // Scale width based on ratio
+                    width = width * ratio;    // Reset width to match scaled image
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     @{
@@ -72,25 +100,25 @@
                            var firstImage = book.ImagesForBook.First();
                            string imageBase64 = Convert.ToBase64String(firstImage.Image);
                            imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
-                       }
+                       } 
                     <div class="col-sm-4 col-lg-4 col-md-4">
                         <div class="thumbnail">
-                            <div style="height:150px; position:static;  width: 100%; top:0;left: 0;">
+                            <div style="height:150px; position:center;  top:0;left: 0;">
                                 <style>
                                 div > img{
-                                        width: 80%;
-                                        max-height: 100%;
-                                        width: 100%;
+                                        margin: 0 auto;
                                         display: block;
                                 }</style>
-                                <img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';"/>
+                                    <a href='@Url.Action("Book", "Home", new { bookId = book.BookId })'>
+                                        <img src='@Url.Content(@imageSrc)' class="story-small"/>
+                                    </a>
                             </div>
                             
 
                             <div class="caption"  style= "width: 100%; word-wrap: break-word; position:relative;">
                                 <div style="height:50px">
                                     <h5>
-                                        <a href="#">@book.Author - @book.Title</a>
+                                        <a href="@Url.Action("Book", "Home", new { bookId = book.BookId })">@book.Author - @book.Title</a>
                                     </h5>
                                 </div>
                                      @book.Genre
@@ -118,7 +146,6 @@
                         </div>
                     </div>
                     }
-                   
                }
                else
                {
@@ -128,9 +155,6 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <hr>
-        <!-- Footer -->
-    </div>
+
 </body>
 </html>

@@ -175,6 +175,9 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\lightbox.css" />
+    <Content Include="Content\pgwslider.css" />
+    <Content Include="Content\pgwslider.min.css" />
     <Content Include="Content\shop-homepage.css" />
     <Content Include="Content\addImage.css" />
     <Content Include="font-awesome\css\font-awesome.css" />
@@ -186,7 +189,10 @@
     <Content Include="Images\books2.jpg" />
     <Content Include="Images\books3.jpg" />
     <Content Include="Images\noFoto.png" />
-    <Content Include="scripts\addImage.js" />
+    <Content Include="Images\overlay.png" />
+    <Content Include="Images\test1.jpg" />
+    <Content Include="Images\test2.jpg" />
+    <Content Include="scripts\AddBook.js" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -230,7 +236,10 @@
     <Content Include="scripts\jquery.MetaData.js" />
     <Content Include="scripts\jquery.MultiFile.js" />
     <Content Include="scripts\jQuery.MultiFile.min.js" />
+    <Content Include="scripts\lightbox.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
+    <Content Include="scripts\pgwslider.js" />
+    <Content Include="scripts\pgwslider.min.js" />
     <Content Include="scripts\showImage.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -265,6 +274,7 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="MySqlInitializer.cs" />
+    <Compile Include="ViewModels\BookModel.cs" />
     <Compile Include="ViewModels\ConversationModel.cs" />
     <Compile Include="ViewModels\ConversationPreviewModel.cs" />
     <Compile Include="ViewModels\ConversationPreviewsModel.cs" />
@@ -307,6 +317,7 @@
     <Content Include="Views\Transaction\Proposition.cshtml" />
     <Content Include="Views\Transaction\Propositions.cshtml" />
     <Content Include="Views\MyAccount\EditBook.cshtml" />
+    <Content Include="Views\Home\Book.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -41,5 +41,6 @@ namespace Booktrade.ViewModels
         [Display(Name = "Opcje dostawy")]
         public List<float> DeliveryPrice { get; set; }
         public List<string> DeliveryName { get; set; }
+        public Dictionary<string,float> DeliveryDict { get; set; }
     }
 }

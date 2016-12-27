@@ -1,7 +1,7 @@
 ﻿@model Booktrade.ViewModels.EditBookModel
 
 @{
-    ViewBag.Title = "Dodaj Książkę";
+    ViewBag.Title = "Edytuj Książkę";
 }
 
 <head>
@@ -9,6 +9,7 @@
     <script src='~/scripts/jquery.MetaData.js' type="text/javascript" language="javascript"></script>
     <script src='~/scripts/jQuery.MultiFile.js' type="text/javascript" language="javascript"></script>
     <script src="~/scripts/showImage.js"></script>
+    <script src="~/scripts/AddBook.js"></script>
     <style>
         .form-group > * {
             margin-bottom: 10px;
@@ -19,15 +20,17 @@
 <script src="/scripts/addImage.js"></script>
 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    @Html.HiddenFor(m => m.Id)
     <fieldset>
-        <legend>Wystaw książkę, którą chcesz sprzedać lub wymienić na inną.</legend>
+        <br />
+        <legend>Edytuj książkę.</legend>
         <div class="col-sm-6 col-sm-offset-3">
             <form class="form-horizontal">
                 <div class="form-group">
                     <label for="Title" class="col-sm-5 col-lg-3 control-label">Tytuł</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextBoxFor(m => m.Title,
-     new { @class = "form-control", placeholder = "Tytuł książki", required = "required", Type = "text" })
+new { @class = "form-control", placeholder = "Tytuł książki", required = "required", Type = "text" })
                     </div>
                 </div>
 
@@ -35,7 +38,7 @@
                     <label for="Author" class="col-sm-5 col-lg-3 control-label">Autor</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextBoxFor(m => m.Author,
-     new { @class = "form-control", placeholder = "Autor książki", required = "required", Type = "text" })
+new { @class = "form-control", placeholder = "Autor książki", required = "required", Type = "text" })
                     </div>
                 </div>
 
@@ -43,7 +46,7 @@
                     <label for="Description" class="col-sm-5 col-lg-3  control-label">Opis</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextAreaFor(m => m.Description,
-     new { @class = "form-control", placeholder = "Opis książki", required = "required", Type = "textarea", rows = "4" })
+new { @class = "form-control", placeholder = "Opis książki", required = "required", Type = "textarea", rows = "4" })
                     </div>
                 </div>
 
@@ -51,7 +54,7 @@
                     <label for="Price" class="col-sm-5 col-lg-3 control-label">Cena</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextBoxFor(m => m.Price,
-     new { @class = "form-control", placeholder = "1234567890", Type = "number", min = "0" })
+new { @class = "form-control", placeholder = "1234567890", Type = "number", min = "0" })
                     </div>
 
                 </div>
@@ -63,37 +66,46 @@
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <span class="btn btn-default btn-file">
-                                    Wybierz <input type="file" id="imgInp" for="BookImage" name="BookImage">
+                                    Wybierz <input type="file" id="imgInp0" for="BookImage" name="BookImage0" value="@Model.BookImages.FirstOrDefault()">
                                 </span>
                             </span>
                             <input type="text" class="form-control" readonly>
                         </div>
 
-                        <img src="@Model.BookImages.FirstOrDefault()" id='img-upload' />
+                        <img src="@Model.BookImages.FirstOrDefault()" id='img-upload0' />
                     </div>
                 </div>
 
 
-                <div class="form-group">
-                    <label for="BookImage" class="col-sm-5 col-lg-3 control-label">Inne zdjęcia</label>
-                    <div class="col-sm-7 col-lg-9">
-                        <div class="input-group">
-                            @*<span class="input-group-btn">*@
-                            <span class="col-sm-7 col-lg-12 btn btn-default btn-file">
-                                Wybierz więcej zdjęć (maks 3)<input name="files[]" type="file" multiple="multiple" id="our-test" class="multi with-preview" accept="gif|jpg|png|jpeg" maxlength="3" data-maxsize="2048" />
-                            </span>
-                            <input type="text" class="form-control" readonly style="visibility:hidden">
-                            @*</span>*@
+                @{int k = 1;
+                    foreach (string img in @Model.BookImages.Skip(1))
+                    {
+                        string name = "BookImage" + k;
+                        string idname = "imgInp" + k;
+                        string idnameImg = "img-upload" + k;
+                        <div class="form-group">
+                            <label for="BookImage" class="col-sm-5 col-lg-3 control-label">Inne zdjęcie</label>
+                            <div class="col-sm-7 col-lg-9">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-default btn-file">
+                                            @name
+                                            Wybierz <input type="file" id=@idname for="BookImage" name=@name value="@Model.BookImages.FirstOrDefault()">
+                                        </span>
+                                    </span>
+                                    <input type="text" class="form-control" readonly>
+                                </div>
+                                <img src="@img" id=@idnameImg />
+                            </div>
                         </div>
-                    </div>
-
-                </div>
-
+                        k++;
+                    }
+                }
                 <div class="form-group">
                     <label for="Genre" class="col-sm-5 col-lg-3 control-label">Gatunek</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.DropDownListFor(m => m.Genre, new SelectList(new List<string>() { "Fantastyka", "Sci Fi", "Kryminał", "Romans", "Dla dzieci", "Horror", "Kuchnia", "Biografia", "Historyczne", "Literatura poważna", "Turystyka" }),
-    new { @class = "form-control" })
+new { @class = "form-control" })
                     </div>
                 </div>
 
@@ -112,7 +124,7 @@
                     <label for="Publisher" class="col-sm-5 col-lg-3 control-label">Wydawca</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextBoxFor(m => m.Publisher,
-     new { @class = "form-control", placeholder = "Wydawca", Type = "text" })
+new { @class = "form-control", placeholder = "Wydawca", Type = "text" })
                     </div>
                 </div>
 
@@ -120,7 +132,7 @@
                     <label for="PublicationDate" class="col-sm-5 col-lg-3 control-label">Data wydania</label>
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextBoxFor(m => m.PublicationDate,
-     new { @class = "form-control", Type = "date" })
+new { @class = "form-control", Type = "date" })
                     </div>
                 </div>
 
@@ -128,146 +140,92 @@
                 <h2>Opcje dostawy</h2>
                 <h4>Wybierz sposób dostawy który będzie dla Ciebie najlepszy.</h4>
 
-
                 @{
 
                     var deliveryList = new AppDbContext().DeliveryOptions.Where(m => m.DeliveryPriceId == Model.Id);
                     int j = 1;
+                    string[] tab = new string[4] { "Odbiór osobisty", "Przesyłka pocztowa - priorytetowa", "Przesyłka pocztowa - ekonomiczna", "Przesyłka kurierska" };
+                    int l = 0;
                     foreach (var delivery in deliveryList)
                     {
-                        string text = j + "t";
-
-                        <div class="form-group">
-                            <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
-                                @Html.CheckBox("deliveryBool1", true) @delivery.Name
-                            </label>
-                            <div id=@text class="col-sm-5 col-lg-3" style="display: none; visibility:hidden">
-                                @Html.TextBoxFor(m => m.DeliveryPrice,
-                                 new { @class = "form-control", Type = "number", min = "0", Value = "@delivery.Price" })
-                            </div>
-                        </div>
+                        Model.DeliveryDict[delivery.Name] = delivery.Price;
+                        if (tab[l] != delivery.Name)
+                        {
+                            tab[l] = "";
+                            l++;
+                        }
+                        l++;
                     }
 
-                    var deliveryBool1 = false;
-                    var deliveryBool2 = false;
-                    var deliveryBool3 = false;
-                    var deliveryBool4 = false;
-                    float deliveryPrice1 = 0, deliveryPrice2 = 15, deliveryPrice3 = 10, deliveryPrice4 = 12;
-
-
-                    foreach (var x in Model.DeliveryName)
+                    l = 0;
+                    foreach (KeyValuePair<string, float> dictonary in Model.DeliveryDict)
                     {
-                        if (x == "Odbiór osobisty")
+                        string id = j + "t";
+                        string deliveryBool = "deliveryBool" + j;
+                        <br />
+                        if (tab[l] == dictonary.Key)
                         {
-                            deliveryBool1 = true;
+                            if (dictonary.Key == "Odbiór osobisty")
+                            {
+                                <div class="form-group">
+                                    <br />
+                                    <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
+                                        @Html.CheckBox(@deliveryBool, true) @dictonary.Key
+                                    </label>
+                                    <div id="@id" class="col-sm-5 col-lg-3" style="visibility: hidden">
+                                        @Html.TextBoxFor(m => m.DeliveryDict[dictonary.Key],
+                         new { @class = "form-control", Type = "number", min = "0", Value = dictonary.Value })
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <br />
+                                    <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
+                                        @Html.CheckBox(@deliveryBool, true) @dictonary.Key
+                                    </label>
+                                    <div id="@id" class="col-sm-5 col-lg-3">
+                                        @Html.TextBoxFor(m => m.DeliveryDict[dictonary.Key],
+                         new { @class = "form-control", Type = "number", min = "0", Value = dictonary.Value })
+                                    </div>
+                                </div>
+                            }
                         }
-                        if (x == "Przesyłka pocztowa - priorytetowa")
+                        else
                         {
-                            deliveryBool2 = true;
+                            <div class="form-group">
+                                <br />
+                                <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
+                                    @Html.CheckBox(@deliveryBool, false) @dictonary.Key
+                                </label>
+                                <div id="@id" class="col-sm-5 col-lg-3" style="display: none">
+                                    @Html.TextBoxFor(m => m.DeliveryDict[dictonary.Key],
+                         new { @class = "form-control", Type = "number", min = "0", Value = dictonary.Value })
+                                </div>
+                            </div>
                         }
-                        if (x == "Przesyłka pocztowa - ekonomiczna")
-                        {
-                            deliveryBool3 = true;
-                        }
-                        if (x == "Przesyłka kurierska")
-                        {
-                            deliveryBool4 = true;
-                        }
+
+
+                        j++;
+                        l++;
                     }
-
-                    @*<br />
-                        <div class="form-group">
-                            <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
-                                @Html.CheckBox("deliveryBool1", deliveryBool1) Odbiór osobisty
-                            </label>
-                            <div id="1t" class="col-sm-5 col-lg-3" style="display: none; visibility:hidden">
-                                @Html.TextBoxFor(m => m.DeliveryPrice,
-                                     new { @class = "form-control", Type = "number", min = "0", Value = "0" })
-                            </div>
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <br />
-                            <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
-                                @Html.CheckBox("deliveryBool2", deliveryBool2) Przesyłka pocztowa - priorytetowa
-                            </label>
-                            <div id="2t" class="col-sm-5 col-lg-3" style="display: none">
-                                @Html.TextBoxFor(m => m.DeliveryPrice,
-                                 new { @class = "form-control", Type = "number", min = "0", Value = "15" })
-                            </div>
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <br />
-                            <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
-                                @Html.CheckBox("deliveryBool3", deliveryBool3) Przesyłka pocztowa - ekonomiczna
-                            </label>
-                            <div id="3t" class="col-sm-5 col-lg-3" style="display: none">
-                                @Html.TextBoxFor(m => m.DeliveryPrice,
-                                 new { @class = "form-control", Type = "number", min = "0", Value = "10" })
-                            </div>
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <br />
-                            <label for="DeliveryName" class="col-sm-7 col-lg-7 control-label">
-                                @Html.CheckBox("deliveryBool4", deliveryBool4) Przesyłka kurierska
-                            </label>
-                            <div id="4t" class="col-sm-5 col-lg-3" style="display: none">
-                                @Html.TextBoxFor(m => m.DeliveryPrice,
-                                 new { @class = "form-control", Type = "number", min = "0", Value = "12" })
-                            </div>
-                        </div>
-                        <br />
-                        <br />*@
                 }
-                <div class="col-sm-offset-5 col-sm-2">
-                    <button type="submit" class="btn btn-default">Wystaw</button>
+                <br />
+                <div class="form-group">
+                    <div class="col-lg-offset-9">
+                        <br />
+                        <button type="submit" class="btn btn-primary">Edytuj</button>
+                        <a href="/myaccount/mybooks" class="btn btn-danger">Cofnij</a>
+                    </div>
                 </div>
-
-
             </form>
         </div>
     </fieldset>
 
 
 
+
     @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
                     }
 
-
-<script>
-    $(function () {
-        $('input[name="deliveryBool1"]').on('click', function () {
-            if ($(this).val() == 'true') {
-                $('#1t').show();
-            } else {
-                $('#1t').hide();
-            }
-        });
-        $('input[name="deliveryBool2"]').on('click', function () {
-            if ($(this).val() == 'true') {
-                $('#2t').show();
-            } else {
-                $('#2t').hide();
-            }
-        });
-        $('input[name="deliveryBool3"]').on('click', function () {
-            if ($(this).val() == 'true') {
-                $('#3t').show();
-            } else {
-                $('#3t').hide();
-            }
-        });
-        $('input[name="deliveryBool4"]').on('click', function () {
-            if ($(this).val() == 'true') {
-                $('#4t').show();
-            } else {
-                $('#4t').hide();
-            }
-
-        });
-
-    });
-
-</script>
