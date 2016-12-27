@@ -18,6 +18,8 @@ namespace Booktrade
         public DbSet<Delivery> DeliveryOptions { get; set; }
         public DbSet<ExchangeMessage> ExchangeMessages { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+
         public AppDbContext()
             : base("DefaultConnection")
         {
@@ -38,6 +40,9 @@ namespace Booktrade
                     cs.MapRightKey("BookId");
                     cs.ToTable("ExchangeMessageBooks");
                 });
+
+            modelBuilder.Entity<Comment>().HasOptional(s => s.BuyerSideTransaction).WithOptionalPrincipal(tr => tr.FromBuyerComment);
+            modelBuilder.Entity<Comment>().HasOptional(s => s.SellerSideTransaction).WithOptionalPrincipal(tr => tr.FromSellerComment);
         }
     }
 }

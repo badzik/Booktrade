@@ -39,6 +39,6 @@ namespace Booktrade.Models
         [InverseProperty("DeliveryPrices")]
         public virtual ICollection<Delivery> DeliveryforBook { get; set; }
 
-        public ICollection<ExchangeMessage> ExchangeMessages { get; set; }
+        public virtual ICollection<ExchangeMessage> ExchangeMessages { get; set; }
     }
 }
