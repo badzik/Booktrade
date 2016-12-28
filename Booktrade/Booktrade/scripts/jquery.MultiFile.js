@@ -859,13 +859,13 @@ if (window.jQuery)(function ($) {
 		// STRING: collection lets you show messages in different languages
 		STRING: {
 			remove: 'x',
-			denied: 'You cannot select a $ext file.\nTry again...',
+			denied: 'Nie możesz wybrać: $ext file.\nSpróbuj ponownie',
 			file: '$file',
-			selected: 'File selected: $file',
-			duplicate: 'This file has already been selected:\n$file',
-			toomuch: 'The files selected exceed the maximum size permited ($size)',
-			toomany: 'Too many files selected (max: $max)',
-			toobig: '$file is too big (max $size)'
+			selected: 'Wybrane zdjęcie: $file',
+			duplicate: 'Zdjęcie zostało już wybrane\n$file',
+			toomuch: 'Wybrane pliki zajmują za dużo miejsca: ($size)',
+			toomany: 'Wybrano za dużo zdjęć (max: $max)',
+			toobig: '$Zdjęcie jest za duże (max $size)'
 		},
 
 		// name of methods that should be automcatically intercepted so the plugin can disable

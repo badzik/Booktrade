@@ -10,6 +10,7 @@ namespace Booktrade.ViewModels
 {
     public class SellBookModel
     {
+
         [Required]
         [StringLength(50)]
         [Display(Name = "Tytuł")]

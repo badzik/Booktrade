@@ -1,0 +1,196 @@
+﻿@model Booktrade.ViewModels.EditBookModel
+@{
+    ViewBag.Title = "Book";
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="~/Content/lightbox.css" rel="stylesheet">
+    <link href="~/Content/pgwslider.css" rel="stylesheet">
+    <script src="~/scripts/pgwslider.js"></script>
+    <script src="~/scripts/lightbox.js"></script>
+
+    <title>Shop Item - Start Bootstrap Template</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/shop-item.css" rel="stylesheet">
+    <script>
+        $(document).ready(function () {
+            $('.story-small').each(function () {
+                var maxWidth = 300; // Max width for the image
+                var maxHeight = 300;    // Max height for the image
+                var ratio = 0;  // Used for aspect ratio
+                var width = $(this).width();    // Current image width
+                var height = $(this).height();  // Current image height
+
+                // Check if the current width is larger than the max
+                if (width > maxWidth) {
+                    ratio = maxWidth / width;   // get ratio for scaling image
+                    $(this).css("width", maxWidth); // Set new width
+                    $(this).css("height", height * ratio);  // Scale height based on ratio
+                    height = height * ratio;    // Reset height to match scaled image
+                    width = width * ratio;    // Reset width to match scaled image
+                }
+
+                // Check if current height is larger than max
+                if (height > maxHeight) {
+                    ratio = maxHeight / height; // get ratio for scaling image
+                    $(this).css("height", maxHeight);   // Set new height
+                    $(this).css("width", width * ratio);    // Scale width based on ratio
+                    width = width * ratio;    // Reset width to match scaled image
+                }
+            });
+        });
+    </script>
+</head>
+@{
+    AppDbContext db = new AppDbContext();
+    var book = db.Books.Single(m => m.BookId == Model.Id);
+    var delivery = book.DeliveryforBook.ToList();
+
+
+
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <p class="lead">Kategorie</p>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">Fantastyka</a>
+                    <a href="#" class="list-group-item">Sci Fi</a>
+                    <a href="#" class="list-group-item">Kryminały</a>
+                    <a href="#" class="list-group-item">Romanse</a>
+                    <a href="#" class="list-group-item">Dla dzieci</a>
+                    <a href="#" class="list-group-item">Horrory</a>
+                    <a href="#" class="list-group-item">Kuchnia</a>
+                    <a href="#" class="list-group-item">Biografie</a>
+                    <a href="#" class="list-group-item">Historyczne</a>
+                    <a href="#" class="list-group-item">Literatura poważna</a>
+                    <a href="#" class="list-group-item">Turystyka</a>
+                    <a href="#" class="list-group-item">Dramat</a>
+                    <a href="#" class="list-group-item">Sensacyjne</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h2>
+                    @Model.Author - @Model.Title
+                </h2>
+                <ul class="pgwSlider">
+                    @{int k = 0;
+                        foreach (string img in @Model.BookImages)
+                        {
+                            if (img == null)
+                            {
+                                <li>
+                                    <img src="~/Images/noFoto.png">
+                                    <a href="~/Images/noFoto.png" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <img src="@img">
+                                    <a href="@img" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
+                                </li>
+                                k++;
+                            }
+                        }
+                    }
+                </ul>
+
+
+
+
+                <div class="col-md-9">
+                    <hr>
+                    <div class="col-md-9">
+                        <p>Gatunek: @Model.Genre</p>
+                        @if (@Model.Publisher != null)
+                        {
+                            <p>Wydawca: @Model.Publisher</p>
+                        }
+                        @if (@Model.Publisher != null)
+                        {
+                            <p>Data wydania: @Model.PublicationDate</p>
+                        }
+
+                    </div>
+                    <div class="col-md-3">
+                        <p>@Model.PublicationDate</p>
+                        <p>Sprzedawca @Model.Seller.Name</p>
+                        <p><span class="glyphicon glyphicon-star" aria-hidden="true"></span><span class="glyphicon glyphicon-star" aria-hidden="true"></span><span class="glyphicon glyphicon-star" aria-hidden="true"></span></p>
+                        <p>@Model.Seller.City, @Model.Seller.Province</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a href='@Url.Action("NewMessage", "Message", new { receiverId = Model.Seller.Id })' type="button" class="btn btn-primary btn-block">Wiadomość</a>
+                        }
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <br />
+                    @if (User.Identity.IsAuthenticated)
+                    {
+
+                        if (Model.Changeable == false && Model.Price == 0)
+                        {
+                            <h3 class="text-center">Za darmo</h3>
+                            <button type="button" class="btn btn-success btn-block">Wybierz tę książkę</button>
+                        }
+                        else if (Model.Changeable == true && Model.Price == 0)
+                        {
+                            <h3 class="text-center">Tylko wymiana</h3>
+                            <a href='@Url.Action("Proposition", "Transaction", new { bookId = Model.Id })' type="button" class="btn btn-info btn-block">Wymień</a>
+                        }
+                        else if (Model.Changeable == true && Model.Price > 0)
+                        {
+                            <button type="button" class="btn btn-success btn-block">Kup teraz</button>
+                            <h4 class="text-center">@Model.Price zł</h4>
+                            <a href='@Url.Action("Proposition", "Transaction", new { bookId = Model.Id })' type="button" class="btn btn-info btn-block">Wymień</a>
+                        }
+                    }
+                    else
+                    {
+                        <h4 class="text-center">@Model.Price zł</h4>
+                        <button type="button" class="btn btn-warning btn-block">Zaloguj się</button>
+                    }
+
+
+
+                </div>
+                <div class="col-md-9">
+                    <hr>
+                    <p>@Model.Description</p>
+                </div>
+                <div class="col-md-3">
+                    <h4>Opcje dostawy:</h4>
+                    @for (int i = 0; i < delivery.Count; i++)
+                    {
+                        <p>@delivery[i].Name - @delivery[i].Price zł.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+                        <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+                        <script src="js/bootstrap.min.js"></script>
+                        <script>
+                            $(document).ready(function () {
+                                $('.pgwSlider').pgwSlider();
+                            });
+                        </script>
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+                        }
