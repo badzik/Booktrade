@@ -1,5 +1,6 @@
 ﻿@model Booktrade.ViewModels.PropositionsModel
 @using System.ComponentModel
+@using Booktrade.Models
 @{
     ViewBag.Title = "Propozycje";
 }
@@ -36,8 +37,16 @@
                                         {
                                             <tr>
                                                 <td>@p.Sender.UserName</td>
-                                                <td>@string.Join(",", p.ProposedBooks.Select(book => book.Title).ToList()) </td>
-                                                <td>@p.ForBook.Title</td>
+                                                <td>@{
+                                                    string raw = "";
+                                                    foreach (Book b in p.ProposedBooks)
+                                                    {
+                                                        raw += "<a href='\\Home\\Book?bookId=" + b.BookId + "'>" + @b.Title + "</a>,";
+                                                    }
+                                                    raw=raw.TrimEnd(',');
+                                                    @Html.Raw(raw)
+                                                } </td>
+                                                <td><a href='@Url.Action("Book", "Home", new { bookId = p.ForBook.BookId })'>@p.ForBook.Title</a></td>
                                                 <td rowspan="2" align="center" style="vertical-align:middle;border-bottom: 3px solid"><a data-toggle="modal" data-id="@p.ExchangeMessageId" class="open-agreeDialog btn btn-primary" data-target="#agreeModal">Przyjmij</a></td>
                                                 <td rowspan="2" align="center" style="vertical-align:middle;border-bottom: 3px solid"><a data-toggle="modal" data-id="@p.ExchangeMessageId" class="open-disagreeDialog btn btn-danger" data-target="#disagreeModal">Odrzuć</a></td>
                                             </tr>
@@ -72,8 +81,16 @@
                                         {
                                             <tr>
                                                 <td>@p.Receiver.UserName</td>
-                                                <td>@string.Join(",", p.ProposedBooks.Select(book => book.Title).ToList()) </td>
-                                                <td>@p.ForBook.Title</td>
+                                                <td>@{
+                                                    string raw = "";
+                                                    foreach (Book b in p.ProposedBooks)
+                                                    {
+                                                        raw += "<a href='\\Home\\Book?bookId="+ b.BookId + "'>"+@b.Title+"</a>,";
+                                                    }
+                                                    raw = raw.TrimEnd(',');
+                                                    @Html.Raw(raw)
+                                                } </td>
+                                                <td><a href='@Url.Action("Book", "Home", new { bookId = p.ForBook.BookId })'>@p.ForBook.Title</a></td>
                                                 <td rowspan="2" align="center" style="vertical-align:middle;border-bottom: 3px solid"><a data-toggle="modal" data-id="@p.ExchangeMessageId" class="open-cancelDialog btn btn-danger" data-target="#cancelModal">Anuluj</a></td>
                                             </tr>
                                             <tr>

@@ -84,7 +84,7 @@ namespace Booktrade.Controllers
         {
             PropositionModel model = new PropositionModel();
             var context = new AppDbContext();
-            model.YourBooks = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).SellingBooks;
+            model.YourBooks = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).SellingBooks.Where(x=>x.isChanged==false && x.isSold==false).ToList();
             int id = 0;
             Int32.TryParse(bookId, out id);
             model.Interested = context.Books.Find(id);
@@ -164,10 +164,10 @@ namespace Booktrade.Controllers
                     Exchanged = true,
                     SellerCommented = false,
                     BuyerCommented = false,
-                    SellerId = eMessage.SenderId,
-                    Seller = eMessage.Sender,
-                    BuyerId = currentUser.Id,
-                    Buyer = currentUser,
+                    BuyerId = eMessage.SenderId, //zamienić buyer z seller
+                    Buyer = eMessage.Sender,
+                    SellerId = currentUser.Id,
+                    Seller = currentUser,
                     BookId = eMessage.BookId,
                     SoldBook = eMessage.ForBook,
                     ExchangeMessageId = eMessage.ExchangeMessageId,

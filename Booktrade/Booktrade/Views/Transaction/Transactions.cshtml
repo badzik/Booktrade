@@ -35,7 +35,7 @@
                                             adr = p.Buyer.Name + " " + p.Buyer.Surname + "\n" + p.Buyer.Address + "\n" + p.Buyer.PostalCode + " " + p.Buyer.City;
                                             <tr>
                                                 <td style="border-bottom: 3px solid">@adr</td>
-                                                <td style="border-bottom: 3px solid">@p.SoldBook.Title</td>
+                                                <td style="border-bottom: 3px solid"><a href='@Url.Action("Book", "Home", new { bookId = @p.SoldBook.BookId })'>@p.SoldBook.Title</a></td>
                                                 <td align="center" style="vertical-align:middle;border-bottom: 3px solid"><a href="@Url.Action("NewComment", "Transaction", new { transactionId = p.TransactionId })" class="btn btn-primary">Wystaw komentarz</a></td>
                                             </tr>
                                         }
@@ -67,7 +67,7 @@
                                             adr = p.Seller.Name + " " + p.Seller.Surname + "\n" + p.Seller.Address + "\n" + p.Seller.PostalCode + " " + p.Seller.City;
                                             <tr>
                                                 <td style="border-bottom: 3px solid">@adr</td>
-                                                <td style="border-bottom: 3px solid">@p.SoldBook.Title</td>
+                                                <td style="border-bottom: 3px solid"><a href='@Url.Action("Book", "Home", new { bookId = @p.SoldBook.BookId })'>@p.SoldBook.Title</a></td>
                                                 <td  align="center" style="vertical-align:middle;border-bottom: 3px solid"><a href="@Url.Action("NewComment", "Transaction", new { transactionId = p.TransactionId })" class="btn btn-primary">Wystaw komentarz</a></td>
                                                 @if (p.Exchanged)
                                                 {

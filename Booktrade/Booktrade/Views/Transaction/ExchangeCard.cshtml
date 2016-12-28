@@ -22,7 +22,7 @@
                             foreach(Book b in Model.ExMessage.ProposedBooks)
                             {
                                 book = b.Author + " - " + b.Title;
-                                <a href="#">@book</a><br />
+                                <a href="@Url.Action("Book", "Home", new { bookId = b.BookId })">@book</a><br />
                             }
                         }
                         </div>

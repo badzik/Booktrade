@@ -23,7 +23,7 @@
                             }
                             else
                             {
-                                <div class="col-md-6"><a href="#">Wyślij wiadomość</a> do sprzedającego w celu uzupełnienia danych do przelewu</div>
+                                <div class="col-md-6"><a href="@Url.Action("NewMessage", "Message", new { receiverId = Model.SellerId })">Wyślij wiadomość</a> do sprzedającego w celu uzupełnienia danych do przelewu</div>
                             }
                         }
                         @{
