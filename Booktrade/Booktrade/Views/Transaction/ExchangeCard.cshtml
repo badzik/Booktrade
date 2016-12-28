@@ -1,0 +1,35 @@
+﻿@model Booktrade.Models.Transaction
+@using Booktrade.Models
+@{
+    ViewBag.Title = "ExchangeCard";
+}
+<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h2>Karta wymiany</h2>
+                <div class="panel panel-default">
+                    @{
+                        string fullName = @Model.Seller.Name + " " + @Model.Seller.Surname;
+                        string addr = @Model.Seller.Address;
+                        string city = @Model.Seller.PostalCode + " " + @Model.Seller.City;
+                    }
+                    <div class="panel-body">
+                        <div class="col-md-6"><strong>Dane do wysyłki:</strong><br /> @fullName <br /> @addr <br /> @city</div>
+                        <div class="col-md-6"><strong>Książki: </strong><br />
+                        @{
+                            string book;
+                            foreach(Book b in Model.ExMessage.ProposedBooks)
+                            {
+                                book = b.Author + " - " + b.Title;
+                                <a href="#">@book</a><br />
+                            }
+                        }
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -37,5 +37,10 @@ namespace Booktrade
         public virtual ICollection<Comment> ReceivedComments { get; set; }
         [InverseProperty("Sender")]
         public virtual ICollection<Comment> SentComments { get; set; }
+
+        [InverseProperty("Seller")]
+        public virtual ICollection<Transaction> SellerTransactions { get; set; }
+        [InverseProperty("Buyer")]
+        public virtual ICollection<Transaction> BuyerTransactions { get; set; }
     }
 }

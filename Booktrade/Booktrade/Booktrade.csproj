@@ -281,6 +281,7 @@
     <Compile Include="ViewModels\RegisterModel.cs" />
     <Compile Include="ViewModels\SellBookModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\TransactionsModel.cs" />
     <Compile Include="ViewModels\UserAttributes.cs" />
     <Compile Include="ViewModels\UserSettingsModel.cs" />
   </ItemGroup>
@@ -311,6 +312,9 @@
     <Content Include="Views\Transaction\Propositions.cshtml" />
     <Content Include="Views\MyAccount\EditBook.cshtml" />
     <Content Include="Views\Transaction\NewComment.cshtml" />
+    <Content Include="Views\Transaction\Transactions.cshtml" />
+    <Content Include="Views\Transaction\PayCard.cshtml" />
+    <Content Include="Views\Transaction\ExchangeCard.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

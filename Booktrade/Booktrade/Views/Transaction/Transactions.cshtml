@@ -1,0 +1,104 @@
+﻿@model Booktrade.ViewModels.TransactionsModel
+@{
+    ViewBag.Title = "Transactions";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                    <li class="nav-item active">
+                        <a class="nav-link active" data-toggle="tab" href="#sold" role="tab">Sprzedane książki</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#bought" role="tab">Zakupione książki</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="sold" role="tabpanel">
+                        @{
+                            string adr;
+                            if (Model.TransactionsAsSeller.Where(x => x.SellerCommented == false).ToList().Count != 0)
+                            {
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Adres do wysyłki</th>
+                                            <th>Sprzedana książka</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var p in Model.TransactionsAsSeller.Where(x => x.SellerCommented == false))
+                                        {
+                                            adr = p.Buyer.Name + " " + p.Buyer.Surname + "\n" + p.Buyer.Address + "\n" + p.Buyer.PostalCode + " " + p.Buyer.City;
+                                            <tr>
+                                                <td style="border-bottom: 3px solid">@adr</td>
+                                                <td style="border-bottom: 3px solid">@p.SoldBook.Title</td>
+                                                <td align="center" style="vertical-align:middle;border-bottom: 3px solid"><a href="@Url.Action("NewComment", "Transaction", new { transactionId = p.TransactionId })" class="btn btn-primary">Wystaw komentarz</a></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>Brak sprzedanych książek</p>
+                            }
+                        }
+                    </div>
+                    <div class="tab-pane" id="bought" role="tabpanel">
+                        @{
+                            if (Model.TransactionsAsBuyer.Where(x => x.BuyerCommented == false).ToList().Count != 0)
+                            {
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Dane sprzedawcy</th>
+                                            <th>Kupiona książka</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var p in Model.TransactionsAsBuyer.Where(x => x.BuyerCommented == false))
+                                        {
+                                            adr = p.Seller.Name + " " + p.Seller.Surname + "\n" + p.Seller.Address + "\n" + p.Seller.PostalCode + " " + p.Seller.City;
+                                            <tr>
+                                                <td style="border-bottom: 3px solid">@adr</td>
+                                                <td style="border-bottom: 3px solid">@p.SoldBook.Title</td>
+                                                <td  align="center" style="vertical-align:middle;border-bottom: 3px solid"><a href="@Url.Action("NewComment", "Transaction", new { transactionId = p.TransactionId })" class="btn btn-primary">Wystaw komentarz</a></td>
+                                                @if (p.Exchanged)
+                                                {
+                                                    <td  align="center" style="vertical-align:middle;border-bottom: 3px solid"><a href="@Url.Action("ExchangeCard", "Transaction", new { transactionId = p.TransactionId })" class="btn btn-success">Wyślij książki</a></td>
+                                                }
+                                                else
+                                                {
+                                                    <td align="center" style="vertical-align:middle;border-bottom: 3px solid"><a href="@Url.Action("PayCard", "Transaction", new { transactionId = p.TransactionId })" class="btn btn-success">Zapłać</a></td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>Brak zakupionych książek</p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#myTab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+</script>
+
+

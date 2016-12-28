@@ -278,7 +278,46 @@ namespace Booktrade.Controllers
                 tr.FromBuyerComment = comment;
                 context.SaveChanges();
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Transactions", "Transaction");
+        }
+
+        public ActionResult Transactions()
+        {
+            var context = new AppDbContext();
+            AppUser currentUser = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            TransactionsModel model = new TransactionsModel()
+            {
+                TransactionsAsBuyer = currentUser.BuyerTransactions,
+                TransactionsAsSeller = currentUser.SellerTransactions
+            };
+            return View(model);
+        }
+
+        public ActionResult ExchangeCard(string transactionId)
+        {
+            return GetTransactionById(transactionId);
+        }
+
+        public ActionResult PayCard(string transactionId)
+        {
+            return GetTransactionById(transactionId);
+        }
+
+        private ActionResult GetTransactionById(string transactionId)
+        {
+            var context = new AppDbContext();
+            AppUser currentUser = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            int id = 0;
+            Int32.TryParse(transactionId, out id);
+            Transaction model = context.Transactions.Find(id);
+            if (model.Buyer.Id == currentUser.Id && model.Exchanged == true)
+            {
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("Information", "Info", new { text = "Error" });
+            }
         }
     }
 }
