@@ -1,6 +1,6 @@
 ﻿@model Booktrade.ViewModels.EditBookModel
 @{
-    ViewBag.Title = "Book";
+    ViewBag.Title = "Książka";
 }
 
 <head>
@@ -57,7 +57,7 @@
 
 
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" } ))
 {
     <br />
     <div class="container">
@@ -86,27 +86,24 @@
                 </h2>
                 <ul class="pgwSlider">
                     @{int k = 0;
+                        if (Model.BookImages.Count() ==0 )
+                        {
+                            <li>
+                                <img src="~/Images/noFoto.png">
+                                <a href="~/Images/noFoto.png" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
+                            </li>
+                        }
                         foreach (string img in @Model.BookImages)
                         {
-                            if (img == null)
-                            {
                                 <li>
-                                    <img src="~/Images/noFoto.png">
-                                    <a href="~/Images/noFoto.png" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li>
-                                    <img src="@img">
+                                    <img src="@img"> 
                                     <a href="@img" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
                                 </li>
                                 k++;
-                            }
                         }
                     }
                 </ul>
-
+                
 
 
 
@@ -114,6 +111,7 @@
                     <hr>
                     <div class="col-md-9">
                         <p>Gatunek: @Model.Genre</p>
+                        @Model.BookImages.Count()
                         @if (@Model.Publisher != null)
                         {
                             <p>Wydawca: @Model.Publisher</p>
@@ -126,10 +124,10 @@
                     </div>
                     <div class="col-md-3">
                         <p>@Model.PublicationDate</p>
-                        <p>Sprzedawca @Model.Seller.Name</p>
+                        <a href='@Url.Action("Usr", "Home", new { userId = Model.Seller.Id })'><p>Sprzedawca @Model.Seller.Name</p></a>
                         <p><span class="glyphicon glyphicon-star" aria-hidden="true"></span><span class="glyphicon glyphicon-star" aria-hidden="true"></span><span class="glyphicon glyphicon-star" aria-hidden="true"></span></p>
                         <p>@Model.Seller.City, @Model.Seller.Province</p>
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.Identity.IsAuthenticated ) //można wysłać do siebie wiadomość
                         {
                             <a href='@Url.Action("NewMessage", "Message", new { receiverId = Model.Seller.Id })' type="button" class="btn btn-primary btn-block">Wiadomość</a>
                         }
@@ -162,12 +160,12 @@
                     else
                     {
                         <h4 class="text-center">@Model.Price zł</h4>
-                        <button type="button" class="btn btn-warning btn-block">Zaloguj się</button>
+                        <a href='@Url.Action("LogIn", "Auth", new { bookId = Model.Id })' type="button" class="btn btn-warning btn-block">Zaloguj się</a>
                     }
 
 
 
-                </div>
+</div>
                 <div class="col-md-9">
                     <hr>
                     <p>@Model.Description</p>

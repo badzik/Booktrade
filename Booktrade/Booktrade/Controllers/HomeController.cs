@@ -1,7 +1,9 @@
 ﻿using Booktrade.Models;
 using Booktrade.ViewModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
@@ -91,6 +93,73 @@ namespace Booktrade.Controllers
             }
 
             return View(bookView);
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult Usr(string userId,int? first, bool? next)
+        {
+            bool n = false;
+            if (next != null)
+            {
+                n = true;
+            }
+            Debug.WriteLine("userId w get" + userId);
+            int l = 0;
+            int f = 0;
+            if (first == null)
+            {
+                l = 10;
+                f = 0;
+            }
+            else {
+                if (n)
+                {
+                    l = first.Value;
+                    f = first.Value;
+                }
+                else
+                {
+                    l = first.Value;
+                }
+            }
+            var context = new AppDbContext();
+            AppUser appUser = context.Users.Find(userId);
+            ICollection<Book> myAllBooks = context.Users.Find(userId).SellingBooks;
+            ICollection<Book> myBooks2 = new Collection<Book>();
+            ICollection<Book> myBooks = new Collection<Book>();
+            foreach (Book b in myAllBooks.Take(l))
+            {
+                myBooks2.Add(b);
+            }
+            foreach (Book b in myBooks2.Skip(f / 2))
+            {
+                myBooks.Add(b);
+            }
+
+            UserViewModel uvm = new UserViewModel
+            {
+                Address = appUser.Address,
+                City = appUser.City,
+                Name = appUser.Name,
+                PostalCode = appUser.PostalCode,
+                Province = appUser.Province,
+                ReceivedComments = appUser.ReceivedComments,
+                Books = myBooks,
+                HowManyInOnePage = l,
+                AllBooks = myAllBooks,
+                userId = userId              
+            };
+            return View(uvm);
+        }
+
+
+
+        [HttpPost]
+        public ActionResult Usr(UserViewModel uvm,string userId)
+        {
+            Debug.WriteLine("Post");
+            Debug.WriteLine(userId);
+            return RedirectToAction("Usr", "Home", new { userId = uvm.userId, first = uvm.HowManyInOnePage });
         }
     }
 }
