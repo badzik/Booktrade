@@ -42,7 +42,7 @@
                 string activeStatic = "";
                 string activeStaticHeader = "btn btn-default";
 
-                if (Model.HowManyInOnePage > 10)
+                if (Model.HowManyBooksInOnePage > 10)
                 {
                     activeBooks = "active";
                     activeBooksHeader = "btn btn-primary";
@@ -51,7 +51,7 @@
                 {
                     activeStatic = "active";
                     activeStaticHeader = "btn btn-primary";
-                }
+                } // w ten sam sposób komentarze powinny być robione
             }
 
             <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">
@@ -76,41 +76,96 @@
             </div>
             <div class="well">
                 <div class="tab-content">
+                    @{
+                        float average = 0.0f;
+                        foreach (var c in Model.ReceivedComments)
+                        {
+                            average += c.Rating;
+                        }
+                        average = (average + 0.0f) / Model.ReceivedComments.Count;
+                        double halfstar = average - Math.Floor(average);
+                    }
+
                     <div class="tab-pane fade in @activeStatic" id="tab1">
-                        <h3>Ilość wystawionych komentarzy </h3>
-                        <h3>Ilość otrzymanych komentarzy @Model.ReceivedComments.Count</h3>
-                        <h3>Średnia ocen </h3>
-                        <h3>Ilość książek w sprzedaży @Model.AllBooks.Count</h3>
-                        <h4>Na Booktrade od  </h4>
+                        <h3>Ilość otrzymanych komentarzy: @Model.ReceivedComments.Count</h3>
+                        <h3>
+                            @{
+                                if (average == average)
+                                {
+                                    @:Średnia ocen
+
+
+                                    string color = "red";
+                                    if (average >= 2.7 && average <= 4.0)
+                                    {
+                                        color = "orange";
+                                    }
+                                    if (average > 3.80)
+                                    {
+                                        color = "green";
+                                    }
+                                    for (int i = 0; i < Math.Floor(average); i++)
+                                    {
+                                        <span class="glyphicon glyphicon-star" style="color: @color" aria-hidden="true"></span>
+                                    }
+                                    if (halfstar >= 0.50)
+                                    {
+                                        <span class="glyphicon glyphicon-star half" style="color: @color" aria-hidden="true"></span>
+                                    }
+                                    @:(@average)
+                                }
+                            }
+                        </h3>
+                        <h3>Ilość książek w sprzedaży: @Model.AllBooks.Count</h3>
+
                     </div>
                     <div class="tab-pane fade in @activeBooks" id="tab2">
                         <label class="col-sm-1 col-lg-1">Ilość na stronie</label>
                         <div class="col-sm-1 col-lg-1">
-                            @Html.DropDownListFor(m => m.HowManyInOnePage, new SelectList(new List<int>() { 10, 20, 30, 40 }),
+                            @Html.DropDownListFor(m => m.HowManyBooksInOnePage, new SelectList(new List<int>() { 10, 20, 30, 40 }),
                        new { @class = "form-control" })
                         </div>
                         @Html.Hidden("userId", Model.userId)
                         <div class="col-sm-2 col-sm-2">
                             <button class="btn btn-default" type="submit"> Zmień </button>
                         </div>
-                        @Html.Partial("MyBooks", Model.Books)
+                        @Html.Partial("_MyBooks", Model.Books)
                         <div class="col-sm-offset-5 col-sm-2">
-                            @if (Model.HowManyInOnePage < Model.AllBooks.Count)
+                            @if (Model.HowManyBooksInOnePage < Model.AllBooks.Count)
                             {
-                                <a href='@Url.Action("Usr", "Home", new { userId = Model.userId,  first = Model.HowManyInOnePage+Model.HowManyInOnePage, next=true})' type="button" class="btn btn-default" id="button">Następna strona</a>
+                                <a href='@Url.Action("Usr", "Home", new { userId = Model.userId,  first = Model.HowManyBooksInOnePage+Model.HowManyBooksInOnePage, next=true})' type="button" class="btn btn-default" id="button">Następna strona</a>
                             }
                             else
                             {
-                                <a href='@Url.Action("Usr", "Home", new { userId = Model.userId,  first = Model.HowManyInOnePage})' type="button" class="btn btn-default" id="button" disabled style="display: none;">Następna strona</a>
+                                <a href='@Url.Action("Usr", "Home", new { userId = Model.userId,  first = Model.HowManyBooksInOnePage})' type="button" class="btn btn-default" id="button" disabled style="display: none;">Następna strona</a>
                             }
 
                         </div>
                     </div>
                     <div class="tab-pane fade in" id="tab3">
+                        <label class="col-sm-1 col-lg-1">Ilość na stronie</label>
+                        <div class="col-sm-1 col-lg-1">
+                            @Html.DropDownListFor(m => m.HowManyCommentsInOnePage, new SelectList(new List<int>() { 10, 20, 30, 40 }),
+                       new { @class = "form-control" })
+                        </div>
+                        @Html.Hidden("userId", Model.userId)
+                        <div class="col-sm-2 col-sm-2">
+                            <button class="btn btn-default" type="submit"> Zmień </button>
+                        </div>
                         @Html.Partial("MyComents", Model.ReceivedComments)
+                        <div class="col-sm-offset-5 col-sm-2">
+                            @if (Model.HowManyCommentsInOnePage < Model.AllComments.Count)
+                            {
+                                <a href='@Url.Action("Usr", "Home", new { userId = Model.userId,  firstC = Model.HowManyCommentsInOnePage+Model.HowManyCommentsInOnePage, nextC=true})' type="button" class="btn btn-default" id="button">Następna strona</a>
+                            }
+                            else
+                            {
+                                <a href='@Url.Action("Usr", "Home", new { userId = Model.userId,  firstC = Model.HowManyCommentsInOnePage+Model.HowManyCommentsInOnePage})' type="button" class="btn btn-default" id="button" disabled style="display: none;">Następna strona</a>
+                            }
+                        </div>
                     </div>
-                </div>
+                </div>  
             </div>
         </div>
     </div>
-}
+                                }

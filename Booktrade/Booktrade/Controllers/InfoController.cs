@@ -42,6 +42,14 @@ namespace Booktrade.Controllers
             {
                 temp = "Wystąpił błąd";
             }
+            if(text== "isSold")
+            {
+                temp = "Książka została już kupiona";
+            }
+            if(text== "bought")
+            {
+                temp = "Kupno książki przebiegło pomyślnie";    
+            }
             return View((object)temp);
         }
     }

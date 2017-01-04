@@ -69,6 +69,13 @@ namespace Booktrade.Controllers
                 deliveryPrices.Add(d.Price);
                 deliveryNames.Add(d.Name);
             }
+            ICollection<Comment> myAllComments = context.Users.Find(book.Seller.Id).ReceivedComments;
+            float average = 0.0f;
+            foreach (var c in myAllComments)
+            {
+                average += c.Rating;
+            }
+            average = (average + 0.0f) / myAllComments.Count();
             var bookView = new EditBookModel
             {
                 Id = bookId,
@@ -83,7 +90,9 @@ namespace Booktrade.Controllers
                 BookImages = bookImages,
                 Seller = book.Seller,
                 DeliveryName = deliveryNames,
-                DeliveryPrice = deliveryPrices
+                DeliveryPrice = deliveryPrices,
+                Average = average,
+                AddDate = book.AddDate
             };
 
 
@@ -96,8 +105,9 @@ namespace Booktrade.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult Usr(string userId,int? first, bool? next)
+        public ActionResult Usr(string userId,int? first, bool? next, int? firstC, bool? nextC)
         {
+            //books
             bool n = false;
             if (next != null)
             {
@@ -122,11 +132,38 @@ namespace Booktrade.Controllers
                     l = first.Value;
                 }
             }
+            //comments
+            bool nC = false;
+            if (nextC != null)
+            {
+                nC = true;
+            }
+            Debug.WriteLine("userId w get" + userId);
+            int lC = 0;
+            int fC = 0;
+            if (firstC == null)
+            {
+                lC = 10;
+                fC = 0;
+            }
+            else {
+                if (nC)
+                {
+                    lC = first.Value;
+                    fC = first.Value;
+                }
+                else
+                {
+                    lC = first.Value;
+                }
+            }
             var context = new AppDbContext();
             AppUser appUser = context.Users.Find(userId);
             ICollection<Book> myAllBooks = context.Users.Find(userId).SellingBooks;
             ICollection<Book> myBooks2 = new Collection<Book>();
             ICollection<Book> myBooks = new Collection<Book>();
+
+            //books
             foreach (Book b in myAllBooks.Take(l))
             {
                 myBooks2.Add(b);
@@ -135,6 +172,19 @@ namespace Booktrade.Controllers
             {
                 myBooks.Add(b);
             }
+            //comments
+            ICollection<Comment> myAllComments = context.Users.Find(userId).ReceivedComments;
+            ICollection<Comment> myComments2 = new Collection<Comment>();
+            ICollection<Comment> myComments = new Collection<Comment>();
+            foreach (Comment c in myAllComments.Take(lC))
+            {
+                myComments2.Add(c);
+            }
+            foreach (Comment c in myComments2.Skip(fC / 2))
+            {
+                myComments.Add(c);
+            }
+
 
             UserViewModel uvm = new UserViewModel
             {
@@ -145,8 +195,10 @@ namespace Booktrade.Controllers
                 Province = appUser.Province,
                 ReceivedComments = appUser.ReceivedComments,
                 Books = myBooks,
-                HowManyInOnePage = l,
+                HowManyBooksInOnePage = l,
                 AllBooks = myAllBooks,
+                AllComments = myAllComments,
+                HowManyCommentsInOnePage = lC,
                 userId = userId              
             };
             return View(uvm);
@@ -159,7 +211,7 @@ namespace Booktrade.Controllers
         {
             Debug.WriteLine("Post");
             Debug.WriteLine(userId);
-            return RedirectToAction("Usr", "Home", new { userId = uvm.userId, first = uvm.HowManyInOnePage });
+            return RedirectToAction("Usr", "Home", new { userId = uvm.userId, first = uvm.HowManyBooksInOnePage });
         }
     }
 }

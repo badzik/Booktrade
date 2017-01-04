@@ -8,10 +8,12 @@ namespace Booktrade.ViewModels
 {
     public class UserViewModel : UserAttributes
     {
-       public string userId { get; set; }
-       public ICollection<Comment> ReceivedComments { get; set; }
-       public int HowManyInOnePage { get; set; }
-       public ICollection<Book> Books { get; set; }
+        public string userId { get; set; }
+        public ICollection<Comment> ReceivedComments { get; set; }
+        public int HowManyBooksInOnePage { get; set; }
+        public int HowManyCommentsInOnePage { get; set; }
+        public ICollection<Book> Books { get; set; }
         public ICollection<Book> AllBooks { get; set; }
+        public ICollection<Comment> AllComments { get; set; }
     }
 }

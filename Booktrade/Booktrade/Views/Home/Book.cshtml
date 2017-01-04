@@ -57,7 +57,7 @@
 
 
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" } ))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <br />
     <div class="container">
@@ -86,7 +86,7 @@
                 </h2>
                 <ul class="pgwSlider">
                     @{int k = 0;
-                        if (Model.BookImages.Count() ==0 )
+                        if (Model.BookImages.Count() == 0)
                         {
                             <li>
                                 <img src="~/Images/noFoto.png">
@@ -95,23 +95,20 @@
                         }
                         foreach (string img in @Model.BookImages)
                         {
-                                <li>
-                                    <img src="@img"> 
-                                    <a href="@img" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
-                                </li>
-                                k++;
+                            <li>
+                                <img src="@img">
+                                <a href="chuj" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
+                            </li>
+                            k++;
+
                         }
                     }
                 </ul>
-                
-
-
-
                 <div class="col-md-9">
                     <hr>
                     <div class="col-md-9">
+                        <p>Data wystawienia: @Model.AddDate</p>
                         <p>Gatunek: @Model.Genre</p>
-                        @Model.BookImages.Count()
                         @if (@Model.Publisher != null)
                         {
                             <p>Wydawca: @Model.Publisher</p>
@@ -125,9 +122,35 @@
                     <div class="col-md-3">
                         <p>@Model.PublicationDate</p>
                         <a href='@Url.Action("Usr", "Home", new { userId = Model.Seller.Id })'><p>Sprzedawca @Model.Seller.Name</p></a>
-                        <p><span class="glyphicon glyphicon-star" aria-hidden="true"></span><span class="glyphicon glyphicon-star" aria-hidden="true"></span><span class="glyphicon glyphicon-star" aria-hidden="true"></span></p>
+                        @{
+                            string color = "red";
+                            if (Model.Average >= 2.7 && Model.Average <= 4.0)
+                            {
+                                color = "orange";
+                            }
+                            if (Model.Average > 3.80)
+                            {
+                                color = "green";
+                            }
+                            if (Model.Average == Model.Average)
+                            {
+                                for (int i = 0; i < Math.Floor(Model.Average); i++)
+                                {
+                                    <span class="glyphicon glyphicon-star" style="color:@color" aria-hidden="true"></span>
+                                }
+                                double halfstar = Model.Average - Math.Floor(Model.Average);
+                                if (halfstar >= 0.50)
+                                {
+                                    <span class="glyphicon glyphicon-star half" style="color: @color" aria-hidden="true"></span>
+                                } @:(@Model.Average)
+                            }
+                            else
+                            {
+                                <p>brak komentarzy</p>
+                            }
+                        }
                         <p>@Model.Seller.City, @Model.Seller.Province</p>
-                        @if (User.Identity.IsAuthenticated ) //można wysłać do siebie wiadomość
+                        @if (User.Identity.IsAuthenticated && Model.Seller.UserName != User.Identity.Name)
                         {
                             <a href='@Url.Action("NewMessage", "Message", new { receiverId = Model.Seller.Id })' type="button" class="btn btn-primary btn-block">Wiadomość</a>
                         }
@@ -137,7 +160,7 @@
                 <div class="col-md-3">
                     <br />
                     <br />
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated && (Model.Seller.UserName != User.Identity.Name) && !(book.isChanged || book.isSold))
                     {
 
                         if (Model.Changeable == false && Model.Price == 0)
@@ -152,20 +175,23 @@
                         }
                         else if (Model.Changeable == true && Model.Price > 0)
                         {
-                            <button type="button" class="btn btn-success btn-block">Kup teraz</button>
+                            <a data-toggle="modal" data-id="@book.BookId" class="open-buyDialog btn btn-success btn-block" data-target="#buyModal">Kup teraz</a>
                             <h4 class="text-center">@Model.Price zł</h4>
                             <a href='@Url.Action("Proposition", "Transaction", new { bookId = Model.Id })' type="button" class="btn btn-info btn-block">Wymień</a>
                         }
                     }
                     else
                     {
-                        <h4 class="text-center">@Model.Price zł</h4>
-                        <a href='@Url.Action("LogIn", "Auth", new { bookId = Model.Id })' type="button" class="btn btn-warning btn-block">Zaloguj się</a>
+                        if (!User.Identity.IsAuthenticated)
+                        {
+                            <h4 class="text-center">@Model.Price zł</h4>
+                            <a href='@Url.Action("LogIn", "Auth", new { bookId = Model.Id })' type="button" class="btn btn-warning btn-block">Zaloguj się</a>
+                        }
                     }
 
 
 
-</div>
+                </div>
                 <div class="col-md-9">
                     <hr>
                     <p>@Model.Description</p>
@@ -180,15 +206,45 @@
             </div>
         </div>
     </div>
-    <!-- jQuery -->
-                        <script src="js/jquery.js"></script>
-    <!-- Bootstrap Core JavaScript -->
-                        <script src="js/bootstrap.min.js"></script>
-                        <script>
-                            $(document).ready(function () {
-                                $('.pgwSlider').pgwSlider();
-                            });
-                        </script>
 
-                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
-                        }
+    <div class="modal fade" id="buyModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Potwierdzenie</h4>
+                </div>
+                <div class="modal-body">
+
+                    <h3>@Model.Author - @Model.Title</h3>
+                    <h4>Cena: @Model.Price zł.</h4>
+                    <p>Czy na pewno chcesz kupić tę książkę? </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                    <a href="#" class="btn btn-success" id="buyLink">Kup za @Model.Price zł</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+                            <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+                            <script src="js/bootstrap.min.js"></script>
+                            <script>
+                                $(document).ready(function () {
+                                    $('.pgwSlider').pgwSlider();
+                                });
+                                $('.open-buyDialog').click(function (e) {
+                                    var bookId = $(this).data('id');
+                                    var link = "/Transaction/BuyNow?bookId=" + bookId;
+                                    $("#buyLink").attr("href", link);
+                                });
+
+                            </script>
+
+                            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+                            }

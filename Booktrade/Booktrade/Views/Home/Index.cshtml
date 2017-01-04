@@ -31,12 +31,13 @@
         });
     </script>
 </head>
-<body>
+<body>  
     @{
         AppDbContext db = new AppDbContext();
-            var books = db.Books.ToList();
-            books = books.OrderBy(u => u.AddDate).ToList();
-            books.Reverse();
+        var books = db.Books.ToList();
+        books = books.OrderBy(u => u.AddDate).ToList();
+        books.Reverse();
+
     }
     <!-- Page Content -->
     <div class="container">
@@ -89,68 +90,71 @@
                     </div>
                 </div>
                 <div class="row">
-               @if (books.Count()!=0)
-               {
-
-                   foreach (var book in books.Take(21))
-                   {
-                       string imageSrc = "/Images/noFoto.png";
-                       if (book.ImagesForBook.FirstOrDefault() != null) 
-                       {
-                           var firstImage = book.ImagesForBook.First();
-                           string imageBase64 = Convert.ToBase64String(firstImage.Image);
-                           imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
-                       } 
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <div style="height:150px; position:center;  top:0;left: 0;">
-                                <style>
-                                div > img{
-                                        margin: 0 auto;
-                                        display: block;
-                                }</style>
-                                    <a href='@Url.Action("Book", "Home", new { bookId = book.BookId })'>
-                                        <img src='@Url.Content(@imageSrc)' class="story-small"/>
-                                    </a>
-                            </div>
-                            
-
-                            <div class="caption"  style= "width: 100%; word-wrap: break-word; position:relative;">
-                                <div style="height:50px">
-                                    <h5>
-                                        <a href="@Url.Action("Book", "Home", new { bookId = book.BookId })">@book.Author - @book.Title</a>
-                                    </h5>
-                                </div>
-                                     @book.Genre
-                                @{
-                                    if (book.Changeable == true)
-                                    {
-                                        <i class="fa fa-check-square" title="Możliwość wymiany" style="color:lightgreen"></i>
-                                    }
+                    @if (books.Count() != 0)
+                    {
+                        foreach (var book in books.Take(21))
+                        {
+                            if (!(book.isChanged || book.isSold))
+                            {
+                                string imageSrc = "/Images/noFoto.png";
+                                if (book.ImagesForBook.FirstOrDefault() != null)
+                                {
+                                    var firstImage = book.ImagesForBook.First();
+                                    string imageBase64 = Convert.ToBase64String(firstImage.Image);
+                                    imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
                                 }
-                                <div>
-                                    @if (book.Changeable == false && book.Price == 0)
-                                    {
-                                        <h4 class="pull-right">Za darmo</h4>
-                                    }
-                                    else if (book.Changeable == true && book.Price == 0)
-                                    {
-                                        <h4 class="pull-right">Tylko wymiana</h4>
-                                    }
-                                    else
-                                    {
-                                        <h4 class="pull-right">@book.Price zł</h4>
-                                    }                                    
+                                <div class="col-sm-4 col-lg-4 col-md-4">
+                                    <div class="thumbnail">
+                                        <div style="height:150px; position:center;  top:0;left: 0;">
+                                            <style>
+                                                div > img {
+                                                    margin: 0 auto;
+                                                    display: block;
+                                                }
+                                            </style>
+                                            <a href='@Url.Action("Book", "Home", new { bookId = book.BookId })'>
+                                                <img src='@Url.Content(@imageSrc)' class="story-small" />
+                                            </a>
+                                        </div>
+
+
+                                        <div class="caption" style="width: 100%; word-wrap: break-word; position:relative;">
+                                            <div style="height:50px">
+                                                <h5>
+                                                    <a href="@Url.Action("Book", "Home", new { bookId = book.BookId })">@book.Author - @book.Title</a>
+                                                </h5>
+                                            </div>  
+                                            @book.Genre
+                                            @{
+                                                if (book.Changeable == true)
+                                                {
+                                                    <i class="fa fa-check-square" title="Możliwość wymiany" style="color:lightgreen"></i>
+                                                }
+                                            }
+                                            <div>
+                                                @if (book.Changeable == false && book.Price == 0)
+                                                {
+                                                    <h4 class="pull-right">Za darmo</h4>
+                                                }
+                                                else if (book.Changeable == true && book.Price == 0)
+                                                {
+                                                    <h4 class="pull-right">Tylko wymiana</h4>
+                                                }
+                                                else
+                                                {
+                                                    <h4 class="pull-right">@book.Price zł</h4>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                             </div>
-                        </div>
-                    </div>
-                    }
-               }
-               else
-               {
-                   <h1>Aktualnie brak ofert ;( </h1>
-               }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <h1>Aktualnie brak ofert ;( </h1>
+                                                }
                 </div>
             </div>
         </div>
