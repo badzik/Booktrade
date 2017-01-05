@@ -180,11 +180,13 @@
     <Content Include="Content\pgwslider.min.css" />
     <Content Include="Content\shop-homepage.css" />
     <Content Include="Content\addImage.css" />
+    <Content Include="Content\user.css" />
     <Content Include="font-awesome\css\font-awesome.css" />
     <Content Include="font-awesome\css\font-awesome.min.css" />
     <Content Include="font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\avatar.png" />
     <Content Include="Images\books1.jpg" />
     <Content Include="Images\books2.jpg" />
     <Content Include="Images\books3.jpg" />
@@ -277,7 +279,6 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="MySqlInitializer.cs" />
-    <Compile Include="ViewModels\BookModel.cs" />
     <Compile Include="ViewModels\ConversationModel.cs" />
     <Compile Include="ViewModels\ConversationPreviewModel.cs" />
     <Compile Include="ViewModels\ConversationPreviewsModel.cs" />
@@ -285,6 +286,7 @@
     <Compile Include="ViewModels\LogInModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\MyComments.cs" />
     <Compile Include="ViewModels\NewCommentModel.cs" />
     <Compile Include="ViewModels\NewMessageModel.cs" />
     <Compile Include="ViewModels\PropositionModel.cs" />
@@ -296,6 +298,7 @@
     <Compile Include="ViewModels\TransactionsModel.cs" />
     <Compile Include="ViewModels\UserAttributes.cs" />
     <Compile Include="ViewModels\UserSettingsModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -325,9 +328,14 @@
     <Content Include="Views\MyAccount\EditBook.cshtml" />
     <Content Include="Views\Transaction\NewComment.cshtml" />
     <Content Include="Views\Home\Book.cshtml" />
+    <Content Include="Views\Home\Usr.cshtml" />
+    <Content Include="Views\Home\_MyBooks.cshtml" />
+    <Content Include="Views\Home\MyComents.cshtml" />
     <Content Include="Views\Transaction\Transactions.cshtml" />
     <Content Include="Views\Transaction\PayCard.cshtml" />
     <Content Include="Views\Transaction\ExchangeCard.cshtml" />
+    <Content Include="Views\Transaction\BuyNow.cshtml" />
+    <Content Include="Views\_SearchedBooks.cshtml" />
     <Content Include="Views\Search\SearchWindow.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

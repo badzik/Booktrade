@@ -23,7 +23,7 @@ namespace Booktrade.Models
         [ForeignKey("SoldBook")]
         public int BookId { get; set; }
         [ForeignKey("ExMessage")]
-        public int ExchangeMessageId { get; set; }
+        public int? ExchangeMessageId { get; set; }
         [ForeignKey("SelectedDelivery")]
         public int? DeliveryId { get; set; }
 

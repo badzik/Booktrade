@@ -1,0 +1,64 @@
+﻿@model ICollection<Booktrade.Models.Book>
+
+@{
+    ViewBag.Title = "MyBooks";
+}
+<head>
+    <script>
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+    <style>
+        #clicable-row:hover {
+            background-color:#337ab7;
+            color:white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+@if (Model != null)
+{
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Data dodania</th>
+                    <th>Nazwa książki</th>
+                    <th>Cena</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model)
+                {
+                    if (!(book.isChanged || book.isSold))
+                    {
+                        string imageSrc = "/Images/noFoto.png";
+                        if (book.ImagesForBook.FirstOrDefault() != null)
+                        {
+                            var firstImage = book.ImagesForBook.First();
+                            string imageBase64 = Convert.ToBase64String(firstImage.Image);
+                            imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                        }
+                    <tr class="clickable-row" id="clicable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })">
+
+                        <td><img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';" style="width:50px; height:50px" />  @book.AddDate</td>
+                        <td>@book.Author - @book.Title</td>
+                        <td>@book.Price zł.</td>
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+}
+else
+{
+    <h2>Sprzedawca nic nie sprzedaje </h2>
+}
+
+
+

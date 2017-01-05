@@ -43,6 +43,7 @@ namespace Booktrade
 
             modelBuilder.Entity<Comment>().HasOptional(s => s.BuyerSideTransaction).WithOptionalPrincipal(tr => tr.FromBuyerComment);
             modelBuilder.Entity<Comment>().HasOptional(s => s.SellerSideTransaction).WithOptionalPrincipal(tr => tr.FromSellerComment);
+           
         }
     }
 }

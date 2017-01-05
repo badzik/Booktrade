@@ -73,6 +73,17 @@ namespace Booktrade.Controllers
                 return View();
             }
             var context = new AppDbContext();
+            Debug.WriteLine(context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).BankNumber + model.Price + deliveryBool1);
+            if (context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).BankNumber == "Nie podano" && model.Price != 0 && deliveryBool1==false)
+            {
+               
+                ModelState.AddModelError("", "W ustawieniach użytkownika nie podano numeru konta potrzebnego do ewentualnej finalizacji tranzakcji. Aby wystawić książkę na sprzedaż należy uzupełnić te dane.");
+                return View();
+            }
+
+            {
+
+            }
 
 
             if (model.Price == null)
@@ -87,6 +98,8 @@ namespace Booktrade.Controllers
                 Genre = model.Genre,
                 Description = model.Description,
                 AddDate = DateTime.Now,
+                isChanged = false,
+                isSold = false,
                 Price = model.Price,
                 Publisher = model.Publisher,
                 Changeable = model.Changeable,
@@ -568,22 +581,6 @@ namespace Booktrade.Controllers
 
 
 
-        public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
-        {
-            var ratioX = (double)maxWidth / image.Width;
-            var ratioY = (double)maxHeight / image.Height;
-            var ratio = Math.Min(ratioX, ratioY);
-
-            var newWidth = (int)(image.Width * ratio);
-            var newHeight = (int)(image.Height * ratio);
-
-            var newImage = new Bitmap(newWidth, newHeight);
-
-            using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-
-            return newImage;
-        }
 
         [HttpGet]
         public ActionResult Settings()
@@ -687,5 +684,45 @@ namespace Booktrade.Controllers
                 return RedirectToAction("Settings", "MyAccount", new { model = model });
             }
         }
+
+        public ActionResult DeleteBook(int bookId)
+        {
+            var context = new AppDbContext();
+            var book = context.Books.SingleOrDefault(m => m.BookId == bookId);
+            var images = context.BookImages.Where(m => m.BookImgId == bookId);
+            var delivery = context.DeliveryOptions.Where(m => m.DeliveryPriceId == bookId);
+            var transaction =  context.Transactions.SingleOrDefault(m => m.BookId == bookId);
+            //context.Messages.Where(m => m.)
+            var exchangeMessages = context.ExchangeMessages.Where(m => m.BookId == bookId);
+
+            context.SaveChanges();
+            foreach (var d in delivery)
+            {
+                context.DeliveryOptions.Remove(d);
+            }
+            context.SaveChanges();
+            foreach (var img in images)
+            {
+                context.BookImages.Remove(img);
+            }
+            context.SaveChanges();
+            if (transaction != null)
+            {
+                context.Transactions.Remove(transaction);
+                context.SaveChanges();
+            }
+            foreach (var eM in exchangeMessages)
+            {
+                context.ExchangeMessages.Remove(eM);
+            }
+            context.SaveChanges();
+            context.Books.Remove(book);
+            context.SaveChanges();
+            
+
+            return RedirectToAction("myBooks", "MyAccount");
+        }
     }
+
+ 
 }

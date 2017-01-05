@@ -42,5 +42,7 @@ namespace Booktrade.ViewModels
         public List<float> DeliveryPrice { get; set; }
         public List<string> DeliveryName { get; set; }
         public Dictionary<string,float> DeliveryDict { get; set; }
+        public DateTime? AddDate { get; set; }
+        public float Average { get; set; }
     }
 }

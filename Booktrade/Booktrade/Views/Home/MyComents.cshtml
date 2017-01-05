@@ -1,0 +1,62 @@
+﻿@model ICollection<Booktrade.Models.Comment>
+
+@{
+    ViewBag.Title = "Komentarze";
+}
+<head>
+    <script>
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+</head>
+@if (Model.Count() != 0)
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Data dodania</th>
+                <th>Ocena</th>
+                <th>Opis transakcji</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var comment in Model)
+            {
+                <tr class="clickable-row" data-href="ur">
+
+                    <td>@comment.CommentDate </td>
+                    <td>
+
+                        @{
+                            string color = "red";
+                            if (comment.Rating >= 2.7 && comment.Rating <= 4.0)
+                            {
+                                color = "orange";
+                            }
+                            if (comment.Rating > 3.80)
+                            {
+                                color = "green";
+                            }
+                            for (int i = 0; i < comment.Rating; i++)
+                            {
+                                <span class="glyphicon glyphicon-star" style="color:@color" aria-hidden="true"></span>
+                            }
+                        } (@comment.Rating)
+
+                    </td>
+                    <td>@comment.Description</td>
+                </tr>
+                            }
+        </tbody>
+    </table>
+
+                            }
+                            else
+                            {
+                                <h2>Sprzedawca nie posiada żadnych wystawionych komentarzy.</h2>
+                            }

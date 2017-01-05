@@ -2,42 +2,43 @@
 @{
     ViewBag.Title = "PayCard";
 }
+<fieldset>
+    <div class="container">
 
-<div class="container">
-    <div class="row">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <h2>Karta kupna</h2>
-                <div class="panel panel-default">
-                    @{
-                        string acc = Model.Seller.BankNumber;
-                        string fullName = @Model.Seller.Name + " " + @Model.Seller.Surname;
-                        string addr = @Model.Seller.Address;
-                        string city = @Model.Seller.PostalCode + " " + @Model.Seller.City;
-                    }
-                    <div class="panel-body">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h2>Karta kupna</h2>
+                    <div class="panel panel-default">
                         @{
-                            if (acc != null)
-                            {
-                                <div class="col-md-6"><strong>Dane do przelewu:</strong><br /> @fullName <br /> @addr <br /> @city <br />Numer konta: @acc</div>
-                            }
-                            else
-                            {
-                                <div class="col-md-6"><a href="@Url.Action("NewMessage", "Message", new { receiverId = Model.SellerId })">Wyślij wiadomość</a> do sprzedającego w celu uzupełnienia danych do przelewu</div>
-                            }
+                            string acc = Model.Seller.BankNumber;
+                            string fullName = @Model.Seller.Name + " " + @Model.Seller.Surname;
+                            string addr = @Model.Seller.Address;
+                            string city = @Model.Seller.PostalCode + " " + @Model.Seller.City;
                         }
-                        @{
-                            float price = @Model.SelectedDelivery.Price + @Model.SoldBook.Price.Value;
-                        }
-                        <div class="col-md-6">
-                            <strong>Wybrany sposób dostawy: </strong> @Model.SelectedDelivery.Name <br />
-                            <strong>Do zapłaty: </strong> @price
+                        <div class="panel-body">
+                            @{
+                                if (acc != null)
+                                {
+                                    <div class="col-md-6"><strong>Dane do przelewu:</strong><br /> @fullName <br /> @addr <br /> @city <br />Numer konta: @acc</div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6"><a href="@Url.Action("NewMessage", "Message", new { receiverId = Model.SellerId })">Wyślij wiadomość</a> do sprzedającego w celu uzupełnienia danych do przelewu</div>
+                                }
+                            }
+                            @{
+                                float price = @Model.SelectedDelivery.Price + @Model.SoldBook.Price.Value;
+                            }
+                            <div class="col-md-6">
+                                <strong>Wybrany sposób dostawy: </strong> @Model.SelectedDelivery.Name <br />
+                                <strong>Do zapłaty: </strong> @price
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
+    </fieldset>

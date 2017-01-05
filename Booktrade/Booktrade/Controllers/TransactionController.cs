@@ -3,6 +3,7 @@ using Booktrade.ViewModels;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -24,7 +25,7 @@ namespace Booktrade.Controllers
             {
                 return RedirectToAction("Information", "Info", new { text = "AccessDenied" });
             }
-            if(model.Interested.Seller.Id== System.Web.HttpContext.Current.User.Identity.GetUserId())
+            if (model.Interested.Seller.Id == System.Web.HttpContext.Current.User.Identity.GetUserId())
             {
                 return RedirectToAction("Information", "Info", new { text = "Error" });
             }
@@ -64,7 +65,7 @@ namespace Booktrade.Controllers
                         Receiver = interested.Seller,
                         ForBook = interested,
                         BookId = interested.BookId,
-                        Accepted=false,
+                        Accepted = false,
                         ProposedBooks = proposedBooks
                     };
                     context.ExchangeMessages.Add(eMessage);
@@ -84,7 +85,7 @@ namespace Booktrade.Controllers
         {
             PropositionModel model = new PropositionModel();
             var context = new AppDbContext();
-            model.YourBooks = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).SellingBooks.Where(x=>x.isChanged==false && x.isSold==false).ToList();
+            model.YourBooks = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).SellingBooks.Where(x => x.isChanged == false && x.isSold == false).ToList();
             int id = 0;
             Int32.TryParse(bookId, out id);
             model.Interested = context.Books.Find(id);
@@ -97,7 +98,7 @@ namespace Booktrade.Controllers
             var context = new AppDbContext();
 
             model.ReceivedPropositions = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).ReceivedExchangeMessages.Where(x => x.Accepted == false).ToList();
-            model.SentPropositions = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).SentExchangeMessages.Where(x=>x.Accepted==false).ToList();
+            model.SentPropositions = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).SentExchangeMessages.Where(x => x.Accepted == false).ToList();
 
             return View(model);
         }
@@ -123,9 +124,9 @@ namespace Booktrade.Controllers
 
 
                 //deleting propositions related to changed book
-                foreach(ExchangeMessage e in currentUser.ReceivedExchangeMessages.ToList())
+                foreach (ExchangeMessage e in currentUser.ReceivedExchangeMessages.ToList())
                 {
-                    if (e.BookId == book.BookId && e.ExchangeMessageId!=eMessage.ExchangeMessageId)
+                    if (e.BookId == book.BookId && e.ExchangeMessageId != eMessage.ExchangeMessageId)
                     {
                         context.ExchangeMessages.Remove(e);
                     }
@@ -147,11 +148,11 @@ namespace Booktrade.Controllers
                         context.ExchangeMessages.Remove(e);
                     }
                 }
-                foreach(ExchangeMessage e in allSentExMesssages.ToList())
+                foreach (ExchangeMessage e in allSentExMesssages.ToList())
                 {
-                    foreach(Book b in eMessage.ProposedBooks)
+                    foreach (Book b in eMessage.ProposedBooks)
                     {
-                        if (e.ProposedBooks.Contains(b) && e.ExchangeMessageId!=eMessage.ExchangeMessageId)
+                        if (e.ProposedBooks.Contains(b) && e.ExchangeMessageId != eMessage.ExchangeMessageId)
                         {
                             context.ExchangeMessages.Remove(e);
                         }
@@ -174,6 +175,7 @@ namespace Booktrade.Controllers
                     ExMessage = eMessage,
                     SelectedDelivery = null,
                     DeliveryId = null
+                   
                 };
                 context.Transactions.Add(transaction);
                 context.SaveChanges();
@@ -226,14 +228,15 @@ namespace Booktrade.Controllers
             int id = 0;
             Int32.TryParse(transactionId, out id);
             Transaction transaction = context.Transactions.Find(id);
-            if(transaction==null || (transaction.Buyer.Id!=currentUser.Id && transaction.Seller.Id != currentUser.Id))
+            if (transaction == null || (transaction.Buyer.Id != currentUser.Id && transaction.Seller.Id != currentUser.Id))
             {
                 return RedirectToAction("Information", "Info", new { text = "Error" });
             }
-            if(transaction.Buyer.Id == currentUser.Id)
+            if (transaction.Buyer.Id == currentUser.Id)
             {
                 model.CommentFor = transaction.Seller.UserName;
-            }else
+            }
+            else
             {
                 model.CommentFor = transaction.Buyer.UserName;
             }
@@ -254,7 +257,7 @@ namespace Booktrade.Controllers
             comment.CommentDate = DateTime.Now;
             if (tr.SellerId == currentUser.Id)
             {
-                if(tr.SellerCommented==true) return RedirectToAction("Information", "Info", new { text = "Error" }); //protect against multiple comments
+                if (tr.SellerCommented == true) return RedirectToAction("Information", "Info", new { text = "Error" }); //protect against multiple comments
                 comment.ReceiverId = tr.BuyerId;
                 comment.Receiver = tr.Buyer;
                 comment.Sender = currentUser;
@@ -318,6 +321,90 @@ namespace Booktrade.Controllers
             {
                 return RedirectToAction("Information", "Info", new { text = "Error" });
             }
+        }
+
+        [HttpGet]
+        public ActionResult BuyNow(int bookId, string error)
+        {
+            if(error == "error")
+            {
+                ModelState.AddModelError("", "Proszę wybrać opcję dostawy");
+            }
+            var context = new AppDbContext();
+            AppUser currentUser = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            var book = context.Books.SingleOrDefault(m => m.BookId == bookId);
+            if (book.isSold)
+            {
+                return RedirectToAction("Information", "Info", new { text = "isSold" });
+            }
+            book.BuyerId = currentUser.Id;
+            book.Buyer = currentUser;
+            book.isSold = true;
+            
+            Transaction model = new Transaction
+            {
+                Seller = book.Seller,
+                SellerId = book.SellerId,
+                SoldBook = book,
+                //może nie działać 
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult BuyNow(string delivery,int bookId)
+        {
+
+
+            if (delivery == null)
+            {
+
+                return RedirectToAction("BuyNow", "Transaction", new { bookId = bookId, error = "error" });
+            }
+            Debug.WriteLine(delivery);
+            Debug.WriteLine(bookId);
+            var context = new AppDbContext();
+            AppUser currentUser = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            var book = context.Books.SingleOrDefault(m => m.BookId == bookId);
+            
+            book.BuyerId = currentUser.Id;
+            book.Buyer = currentUser;
+            book.isSold = true;
+            context.SaveChanges();
+
+            var deliveryforbook = context.DeliveryOptions.Where(m => m.DeliveryPriceId == bookId);
+            var tab = delivery.Split(',');
+            Debug.WriteLine("Test");
+            
+            var name = tab[1];
+            Debug.WriteLine(name);
+            var thisDelivery = deliveryforbook.SingleOrDefault(m => m.Name == name);
+
+            var exMessage = context.ExchangeMessages.Where(m => m.BookId == bookId);
+            if(exMessage.Count() != 0)
+            {
+                context.ExchangeMessages.RemoveRange(exMessage);
+                context.SaveChanges();
+            }
+            Transaction model = new Transaction
+            {
+                Exchanged = false,
+                BookId = bookId,
+                Buyer = book.Buyer,
+                BuyerId = book.BuyerId,
+                Seller = book.Seller,
+                SellerId = book.SellerId,
+                SoldBook = book,
+                DeliveryId = thisDelivery.DeliveryId,
+                SelectedDelivery = thisDelivery,
+                SellerCommented = false,
+                BuyerCommented = false,
+                ExchangeMessageId = null,
+                ExMessage = null
+            };
+            context.Transactions.Add(model);
+            context.SaveChanges();
+            return RedirectToAction("Information", "Info", new { text = "bought" });
         }
     }
 }

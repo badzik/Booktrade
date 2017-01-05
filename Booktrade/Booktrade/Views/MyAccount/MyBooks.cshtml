@@ -1,53 +1,96 @@
 ﻿@model ICollection<Booktrade.Models.Book>
 
 @{
-    ViewBag.Title = "MyBooks";
+    ViewBag.Title = "Moje książki";
 }
-
-    @if(Model !=null)
-    {
-            <legend></legend>
-            <div class="container">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Data dodania</th>
-                            <th>Nazwa książki</th>
-                            <th>Cena</th>
-                            <th> </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var book in Model)
+<head>
+    <script>
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+    <style>
+        #clicable-row:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+@if (Model != null)
+{
+    <legend></legend>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Data dodania</th>
+                    <th>Nazwa książki</th>
+                    <th>Cena</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model)
+                {
+                    if (!(book.isChanged || book.isSold))
+                    {
+                        string imageSrc = "/Images/noFoto.png";
+                        if (book.ImagesForBook.FirstOrDefault() != null)
                         {
-                            string imageSrc = "/Images/noFoto.png";
-                            if (book.ImagesForBook.FirstOrDefault() != null)
-                            {
-                                var firstImage = book.ImagesForBook.First();
-                                string imageBase64 = Convert.ToBase64String(firstImage.Image);
-                                imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
-                            }
-                            <tr>
-                                <td><img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';" style="width:50px; height:50px" />  @book.AddDate</td>
-                                <td>@book.Author - @book.Title</td>
-                                <td>@book.Price zł.</td>
-                                <td>
-                                    <div class="pull-right">
-                                        <a class="btn btn-primary" @Html.ActionLink("Edytuj", "EditBook", "MyAccount", new { bookId = book.BookId }, null)
-                                        <a href="#" class="btn btn-danger">Usuń</a>
-                                    </div>
-                                </td>
-                            </tr>
+                            var firstImage = book.ImagesForBook.First();
+                            string imageBase64 = Convert.ToBase64String(firstImage.Image);
+                            imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
                         }
-                    </tbody>
-                </table>
+                    <tr id="clicable-row">
+                        <td class="clickable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })"><img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';" style="width:50px; height:50px" />  @book.AddDate</td>
+                        <td class="clickable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })">@book.Author - @book.Title</td>
+                        <td class="clickable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })">@book.Price zł.</td>
+                        <td>
+                            <div class="pull-right">
+                                <a class="btn btn-primary" @Html.ActionLink("Edytuj", "EditBook", "MyAccount", new { bookId = book.BookId }, null)
+                                        <a data-toggle="modal" data-id="@book.BookId" class="open-deleteDialog btn btn-danger" data-target="#deleteModal">Usuń</a>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <h2>Obecnie nic nie sprzedajesz ;( )</h2>
+}
+<form action="/MyAccount/AddBook">
+    <input class="btn btn-default" type="submit" value="Dodaj książkę" />
+</form>
+
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Potwierdzenie</h4>
             </div>
-    }else
-    {
-        <h2>Obecnie nic nie sprzedajesz ;( )</h2>
-    }
-        <form action="/MyAccount/AddBook">
-            <input class="btn btn-default" type="submit" value="Dodaj książkę" />
-        </form>
-
-
+            <div class="modal-body">
+                <p>Czy na pewno chcesz usunąć tę książkę?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                <a href="#" class="btn btn-danger" id="deleteLink">Usuń</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.open-deleteDialog').click(function (e) {
+        var bookId = $(this).data('id');
+        var link = "/myAccount/deleteBook?bookId=" + bookId;
+        $("#deleteLink").attr("href", link);
+    });
+</script>

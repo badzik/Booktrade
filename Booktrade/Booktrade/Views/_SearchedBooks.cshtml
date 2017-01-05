@@ -1,0 +1,94 @@
+﻿@model ICollection<Booktrade.Models.Book>
+@using Booktrade.ViewModels
+@{
+    ViewBag.Title = "SearchedBooks";
+}
+<head>
+    <script>
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+    <style>
+        #clicable-row:hover {
+            background-color:#f5f5f5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+@if (Model != null)
+{
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nazwa książki</th>
+                    <th>Gatunek</th>
+                    <th>Cena</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model)
+                {
+                    if (!(book.isChanged || book.isSold))
+                    {
+                        string imageSrc = "/Images/noFoto.png";
+                        if (book.ImagesForBook.FirstOrDefault() != null)
+                        {
+                            var firstImage = book.ImagesForBook.First();
+                            string imageBase64 = Convert.ToBase64String(firstImage.Image);
+                            imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                        }
+                    <tr class="clickable-row" id="clicable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })">
+
+                        <td><img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';" style="width:50px; height:50px" />  @book.Author - @book.Title</td>
+                        <td>@book.Genre</td>
+                        @{
+                            string price = "";
+                            if (book.Price == 0)
+                            {
+                                if (book.isChanged)
+                                {
+                                    price = "Tylko wymiana";
+                                }
+                                else
+                                {
+                                    price = "Za darmo";
+                                }
+                            }
+                            else
+                            {
+                                price = @book.Price.ToString() + "zł";
+                            }
+                        }
+                        @if (book.Changeable)
+                        {
+                            <td>
+                                <i class="fa fa-check-square" title="Możliwość wymiany" style="color:lightgreen"></i>
+                                @price
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@price</td>
+                        }
+                        
+                        
+                       
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+}
+else
+{
+    <h2>Sprzedawca nic nie sprzedaje </h2>
+}
+
+
+
