@@ -261,6 +261,7 @@
     <Compile Include="Controllers\InfoController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\MyAccountController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="FilterConfig.cs" />
     <Compile Include="Global.asax.cs">
@@ -289,6 +290,7 @@
     <Compile Include="ViewModels\PropositionModel.cs" />
     <Compile Include="ViewModels\PropositionsModel.cs" />
     <Compile Include="ViewModels\RegisterModel.cs" />
+    <Compile Include="ViewModels\SearchModel.cs" />
     <Compile Include="ViewModels\SellBookModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TransactionsModel.cs" />
@@ -326,6 +328,7 @@
     <Content Include="Views\Transaction\Transactions.cshtml" />
     <Content Include="Views\Transaction\PayCard.cshtml" />
     <Content Include="Views\Transaction\ExchangeCard.cshtml" />
+    <Content Include="Views\Search\SearchWindow.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
