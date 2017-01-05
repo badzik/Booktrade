@@ -238,10 +238,13 @@
     <Content Include="scripts\jquery.MetaData.js" />
     <Content Include="scripts\jquery.MultiFile.js" />
     <Content Include="scripts\jQuery.MultiFile.min.js" />
+    <Content Include="scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="scripts\lightbox.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
     <Content Include="scripts\pgwslider.js" />
     <Content Include="scripts\pgwslider.min.js" />
+    <Content Include="scripts\SearchScript.js" />
     <Content Include="scripts\showImage.js" />
     <Content Include="scripts\starRating.js" />
     <Content Include="Web.config">
@@ -293,6 +296,7 @@
     <Compile Include="ViewModels\PropositionsModel.cs" />
     <Compile Include="ViewModels\RegisterModel.cs" />
     <Compile Include="ViewModels\SearchModel.cs" />
+    <Compile Include="ViewModels\SearchPartialModel.cs" />
     <Compile Include="ViewModels\SellBookModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TransactionsModel.cs" />
@@ -335,7 +339,7 @@
     <Content Include="Views\Transaction\PayCard.cshtml" />
     <Content Include="Views\Transaction\ExchangeCard.cshtml" />
     <Content Include="Views\Transaction\BuyNow.cshtml" />
-    <Content Include="Views\_SearchedBooks.cshtml" />
+    <Content Include="Views\Search\_SearchedBooks.cshtml" />
     <Content Include="Views\Search\SearchWindow.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -20,6 +20,8 @@ namespace Booktrade.ViewModels
         public string SortBy { get; set; }
         public string Category { get; set; }
         public int CurrentPage { get; set; }
+        public int NumberOfPages { get; set; }
+        public int ResultsForPage { get; set; }
         public ICollection<Book> Results { get; set; }
     }
 }

@@ -3,24 +3,34 @@
     ViewBag.Title = "SearchWindow";
 }
 
+<head>
+    <script src="~/scripts/SearchScript.js"></script>
+    <style>
+        #clicable-row:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
 <div class="container">
     <div class="row">
         <div class="col-md-3">
             <p class="lead" style="margin:5px">Kategorie</p>
             <div class="list-group">
-                <a href="#" class="list-group-item">Fantastyka</a>
-                <a href="#" class="list-group-item">Sci Fi</a>
-                <a href="#" class="list-group-item">Kryminały</a>
-                <a href="#" class="list-group-item">Romanse</a>
-                <a href="#" class="list-group-item">Dla dzieci</a>
-                <a href="#" class="list-group-item">Horrory</a>
-                <a href="#" class="list-group-item">Kuchnia</a>
-                <a href="#" class="list-group-item">Biografie</a>
-                <a href="#" class="list-group-item">Historyczne</a>
-                <a href="#" class="list-group-item">Literatura poważna</a>
-                <a href="#" class="list-group-item">Turystyka</a>
-                <a href="#" class="list-group-item">Dramat</a>
-                <a href="#" class="list-group-item">Sensacyjne</a>
+                <a href="#" class="list-group-item category">Fantastyka</a>
+                <a href="#" class="list-group-item category">Sci Fi</a>
+                <a href="#" class="list-group-item category">Kryminały</a>
+                <a href="#" class="list-group-item category">Romanse</a>
+                <a href="#" class="list-group-item category">Dla dzieci</a>
+                <a href="#" class="list-group-item category">Horrory</a>
+                <a href="#" class="list-group-item category">Kuchnia</a>
+                <a href="#" class="list-group-item category">Biografie</a>
+                <a href="#" class="list-group-item category">Historyczne</a>
+                <a href="#" class="list-group-item category">Literatura poważna</a>
+                <a href="#" class="list-group-item category">Turystyka</a>
+                <a href="#" class="list-group-item category">Dramat</a>
+                <a href="#" class="list-group-item category">Sensacyjne</a>
             </div>
         </div>
         <div class="col-md-9">
@@ -29,9 +39,9 @@
             {
                 <div class="input-group col-md-6 col-md-offset-3">
                     @Html.TextBoxFor(m => m.Phrase,
-                        new { @class = "form-control", placeholder = "Szukaj", Type = "Text" })
+         new { @class = "form-control", placeholder = "Szukaj", Type = "Text" })
                     <div class="input-group-btn">
-                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        <button class="btn btn-default submitButton" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                     </div>
                 </div>
                 <button type="button" class="btn-link btn-sm" data-toggle="collapse" data-target="#filter-panel">
@@ -44,14 +54,14 @@
                                 <div class="form-group">
                                     <label class="filter-col" style="margin-right:0;">Miasto:</label>
                                     @Html.TextBoxFor(m => m.City,
-                                     new { @class = "form-control", Type = "Text" })
+      new { @class = "form-control", Type = "Text" })
                                 </div>
                                 <div class="form-group">
                                     <label class="filter-col" style="margin-right:0;">Województwo:</label>
                                     @Html.DropDownListFor(m => m.Province, new SelectList(new List<string>() {"Wszystkie", "Dolnośląskie", "Kujawsko-pomorskie", "Lubelskie",
                        "Lubuskie", "Łódzkie", "Małopolskie", "Mazowieckie", "Opolskie", "Podkarpackie", "Podlaskie", "Pomorskie", "Śląskie",
                        "Świętokrzyskie", "Warmińsko-mazurskie", "Wielkopolskie", "Zachodniopomorskie" }),
-                       new { @class = "form-control" })
+new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -59,11 +69,11 @@
                                     <div><label class="filter-col" style="margin-right:0;">Cena:</label></div>
                                     <div class="col-md-6">
                                         @Html.TextBoxFor(m => m.PriceFrom,
-                                        new { @class = "form-control", placeholder = "Od", Type = "number", min = "0" })
+     new { @class = "form-control", placeholder = "Od", Type = "number", min = "0", Value = (Model.PriceFrom != 0 ? Model.PriceFrom.ToString() : "") })
                                     </div>
                                     <div class="col-md-6">
                                         @Html.TextBoxFor(m => m.PriceTo,
-                                        new { @class = "form-control", placeholder = "Do", Type = "number", min = "0" })
+     new { @class = "form-control", placeholder = "Do", Type = "number", min = "0", Value = (Model.PriceTo != 0 ? Model.PriceTo.ToString() : "") })
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -79,47 +89,114 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    @Html.HiddenFor(m=>m.Category)
                                     <label class="filter-col" style="margin-right:0;">Wydawnictwo:</label>
                                     @Html.TextBoxFor(m => m.Publisher,
-                                     new { @class = "form-control", Type = "Text" })
+      new { @class = "form-control", Type = "Text" })
                                 </div>
                                 <div class="form-group">
                                     <label class="filter-col" style="margin-right:0;">Rok wydania:</label>
                                     @Html.TextBoxFor(m => m.PublicationYear,
-                                        new { @class = "form-control", Type = "number", min = "1800" })
+         new { @class = "form-control", Type = "number", min = "1800", Value = (Model.PublicationYear != 0 ? Model.PublicationYear.ToString() : "") })
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-default" style="margin:5px">
+                        <button type="submit" class="btn btn-default submitButton" style="margin:5px">
                             <span class="glyphicon glyphicon-record"></span> Wyszukaj
                         </button>
                     </div>
                 </div>
                 <div>
-                    <div class="form-group col-md-4 col-md-offset-8">
-                        <label for="pref-orderby">Sortuj według:</label>
-                        <select id="pref-orderby" class="form-control small">
-                            <option value="All">Dowolna</option>
-                            <option value="PriceAsc">Cena: rosnąco</option>
-                            <option value="PriceDesc">Cena: malejąco</option>
-                            <option value="DateNew">Data dodania: od najnowszych</option>
-                            <option value="DateOld">Data dodania: od najstarszych</option>
-                        </select>
+                    <div class="col-md-2">
+                        <label>Ilość na stronie</label>
+                        @Html.DropDownListFor(m => m.ResultsForPage, new SelectList(new List<int>() { 10, 20, 30, 40 }),
+                       new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-md-3  col-md-offset-7">
+                        <label for="SortBy">Sortuj według:</label>
+                        @Html.DropDownListFor(m => m.SortBy, new List<SelectListItem> { new SelectListItem { Text = "Dowolna", Value = "Any" }, new SelectListItem { Text = "Cena: rosnąco", Value = "PriceAsc" },
+                       new SelectListItem { Text = "Cena: malejąco", Value = "PriceDesc" },new SelectListItem { Text = "Data dodania: od najnowszych", Value = "DateNew" },new SelectListItem { Text = "Data dodania: od najstarszych", Value = "DateOld" } }, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="PartialView">
+                <div class="Results">
+                    @if (Model.Results.Count != 0)
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nazwa książki</th>
+                                    <th>Gatunek</th>
+                                    <th>Cena</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var book in Model.Results)
+                                {
+                                    if (!(book.isChanged || book.isSold))
+                                    {
+                                        string imageSrc = "/Images/noFoto.png";
+                                        if (book.ImagesForBook.FirstOrDefault() != null)
+                                        {
+                                            var firstImage = book.ImagesForBook.First();
+                                            string imageBase64 = Convert.ToBase64String(firstImage.Image);
+                                            imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                                        }
+                                        <tr class="clickable-row" id="clicable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })">
 
+                                            <td><img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';" style="width:50px; height:50px" />  @book.Author - @book.Title</td>
+                                            <td>@book.Genre</td>
+                                            @{
+                                                string price = "";
+                                                if (book.Price == 0)
+                                                {
+                                                    if (book.Changeable)
+                                                    {
+                                                        price = "Tylko wymiana";
+                                                    }
+                                                    else
+                                                    {
+                                                        price = "Za darmo";
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    price = @book.Price.ToString() + "zł";
+                                                }
+                                            }
+                                            @if (book.Changeable)
+                                            {
+                                                <td>
+                                                    <i class="fa fa-check-square" title="Możliwość wymiany" style="color:lightgreen"></i>
+                                                    @price
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>@price</td>
+                                            }
+                                        </tr>
+                                                    }
+                                                }
+                            </tbody>
+                        </table>
+
+                                                }
+                                                else
+                                                {
+                                                    <h2>Brak książek o podanych parametrach</h2>
+                                                }
                 </div>
                 <div>
-                    <div class="col-md-4 col-md-offset-8">
+                    <div class="col-md-4 col-md-offset-8" id="pageControl">
                         <a href="#" id="backMaxArrow" class="myArrow"><span class="fa fa-angle-double-left"></span></a>
                         <a href="#" id="backArrow" class="myArrow"><span class="fa fa-angle-left"></span></a>
-                        @Html.LabelFor(m => m.CurrentPage, new { @class = "currentPage" }) z <label id="maxPages">10</label>
+                        <span class="currentPage">@Html.DisplayFor(m => m.CurrentPage)</span> z <span class="numberOfPages">@Html.DisplayFor(m => m.NumberOfPages)</span>
                         <a href="#" id="nextArrow" class="myArrow"><span class="fa fa-angle-right"></span></a>
                         <a href="#" id="nextMaxArrow" class="myArrow"><span class="fa fa-angle-double-right"></span></a>
                     </div>
                 </div>
-            }
+                                                }
         </div>
     </div>
 </div>
