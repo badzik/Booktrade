@@ -29,7 +29,7 @@
                                     { <text> style="background-color:#ade6f4" </text>    } }>
                                     <td style="width:80%">
                                         <strong>
-                                            <a href="#">@m.Interlocutor.UserName</a>
+                                            <a href='@Url.Action("Usr", "Home", new { userId = @m.Interlocutor.Id })'>@m.Interlocutor.UserName</a>
                                         </strong><br>
                                         <span>
                                             <a href="@Url.Action("conversation", "message", new { interlocutorEmail = m.Interlocutor.Email })">@text</a>

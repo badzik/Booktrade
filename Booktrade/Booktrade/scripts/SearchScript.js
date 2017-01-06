@@ -3,6 +3,18 @@
         window.document.location = $(this).data("href");
     });
 
+    $("#ForSell").change(function () {
+        if ($(this).is(":checked")) {
+            $("#PriceFrom").prop('disabled', false);
+            $("#PriceTo").prop('disabled', false);
+        } else {
+            $("#PriceFrom").val(null);
+            $("#PriceTo").val(null);
+            $("#PriceFrom").prop('disabled', true);
+            $("#PriceTo").prop('disabled', true);
+        }
+    });
+
     $(".submitButton").click(function (event) {
         event.preventDefault();
         $.when(makeAjax()).done(function () {

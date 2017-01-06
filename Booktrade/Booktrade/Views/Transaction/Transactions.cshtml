@@ -27,6 +27,7 @@
                                             <th>Adres do wysyłki</th>
                                             <th>Sprzedana książka</th>
                                             <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -37,6 +38,7 @@
                                                 <td style="border-bottom: 3px solid">@adr</td>
                                                 <td style="border-bottom: 3px solid"><a href='@Url.Action("Book", "Home", new { bookId = @p.SoldBook.BookId })'>@p.SoldBook.Title</a></td>
                                                 <td align="center" style="vertical-align:middle;border-bottom: 3px solid"><a href="@Url.Action("NewComment", "Transaction", new { transactionId = p.TransactionId })" class="btn btn-primary">Wystaw komentarz</a></td>
+                                                <td align="center" style="vertical-align:middle;border-bottom: 3px solid"><a href="@Url.Action("TransactionDetails", "Transaction", new { transactionId = p.TransactionId })" class="btn btn-success">Szczegóły</a></td>
                                             </tr>
                                         }
                                     </tbody>

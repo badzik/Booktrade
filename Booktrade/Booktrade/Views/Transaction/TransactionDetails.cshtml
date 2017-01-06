@@ -1,0 +1,55 @@
+﻿@model Booktrade.Models.Transaction
+@using Booktrade.Models
+@{
+    ViewBag.Title = "TransactionDetails";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h2>Szczegóły sprzedaży</h2>
+                <div class="panel panel-default">
+                    @{
+                        string fullName = @Model.Buyer.Name + " " + @Model.Buyer.Surname;
+                        string addr = @Model.Buyer.Address;
+                        string city = @Model.Buyer.PostalCode + " " + @Model.Buyer.City;
+                    }
+                    <div class="panel-body">
+                        <div class="col-md-6"><strong>Dane do kupującego:</strong><br /> @fullName <br /> @addr <br /> @city</div>
+                        <div class="col-md-6">
+                            @{ if (Model.Exchanged == true)
+                                {
+                                    <strong>Zaakceptowane książki: </strong><br />
+                                    string bk;
+                                    foreach (Book b in Model.ExMessage.ProposedBooks)
+                                    {
+                                        bk = b.Author + " - " + b.Title;
+                                        <a href="@Url.Action("Book", "Home", new { bookId = b.BookId })">@bk</a><br />
+                                    }
+                                    <br /><br />
+                                    <strong>Książka wymieniona: </strong><br />
+                                }
+                                else
+                                {
+                                    <strong>Wybrany sposób dostawy: </strong><br />
+                                    @Model.SelectedDelivery.Name <br/><br/>
+
+                                    <strong>Sprzedana książka: </strong><br />
+                                }
+                            }
+
+                            @{
+                                string book;                          
+                                book = Model.SoldBook.Author + " - " + Model.SoldBook.Title;
+                                <a href="@Url.Action("Book", "Home", new { bookId = Model.SoldBook.BookId })">@book</a><br />
+
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

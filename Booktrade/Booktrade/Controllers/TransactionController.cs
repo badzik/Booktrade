@@ -306,6 +306,23 @@ namespace Booktrade.Controllers
             return GetTransactionById(transactionId);
         }
 
+        public ActionResult TransactionDetails(string transactionId)
+        {
+            var context = new AppDbContext();
+            AppUser currentUser = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            int id = 0;
+            Int32.TryParse(transactionId, out id);
+            Transaction model = context.Transactions.Find(id);
+            if (model.Seller.Id == currentUser.Id)
+            {
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("Information", "Info", new { text = "Error" });
+            }
+        }
+
         private ActionResult GetTransactionById(string transactionId)
         {
             var context = new AppDbContext();
@@ -313,7 +330,7 @@ namespace Booktrade.Controllers
             int id = 0;
             Int32.TryParse(transactionId, out id);
             Transaction model = context.Transactions.Find(id);
-            if (model.Buyer.Id == currentUser.Id && model.Exchanged == true)
+            if (model.Buyer.Id == currentUser.Id)
             {
                 return View(model);
             }

@@ -89,10 +89,10 @@ namespace Booktrade.Controllers
                 Text = null
             };
             model.messages = currentUser.SentMessages.Concat(currentUser.ReceivedMessages).Where(x => x.Receiver.Id == interlocutor.Id || x.Sender.Id == interlocutor.Id).OrderByDescending(x => x.SendDate).ToList();
-            if (model.messages.Last().Receiver.Id == currentUser.Id && !model.messages.Last().isRead)
+            if (model.messages.First().Receiver.Id == currentUser.Id && !model.messages.First().isRead)
             {
                 var context = new AppDbContext();
-                Message message = context.Messages.Find(model.messages.Last().MessageId);
+                Message message = context.Messages.Find(model.messages.First().MessageId);
                 message.isRead = true;
                 context.SaveChanges();
             }

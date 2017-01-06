@@ -341,6 +341,7 @@
     <Content Include="Views\Transaction\BuyNow.cshtml" />
     <Content Include="Views\Search\_SearchedBooks.cshtml" />
     <Content Include="Views\Search\SearchWindow.cshtml" />
+    <Content Include="Views\Transaction\TransactionDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
