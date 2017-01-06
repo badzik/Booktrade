@@ -16,7 +16,7 @@ namespace Booktrade.ViewModels
         [Display(Name = "Tytuł")]
         public string Title { get; set; }
         [Required]
-        [StringLength(50)]
+        [StringLength(250)]
         [Display(Name = "Opis")]
         public string Description { get; set; }
         [Required]
@@ -24,6 +24,7 @@ namespace Booktrade.ViewModels
         public string Genre { get; set; }
         [Required]
         [Display(Name = "Autor")]
+        [StringLength(50)]
         public string Author { get; set; }
         [Display(Name = "Wydawca")]
         public string Publisher { get; set; }
@@ -31,7 +32,7 @@ namespace Booktrade.ViewModels
         public DateTime? PublicationDate { get; set; }
         [Display(Name = "Chęć wymiany")]
         public bool Changeable { get; set; }
-        [Range(0, 5000)]
+        [Range(0, 100000)]
         [Display(Name = "Cena")]
         public float? Price { get; set; }
         [Display(Name = "Zdjęcie")]
