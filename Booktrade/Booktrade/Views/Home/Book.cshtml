@@ -17,14 +17,15 @@
 
     <title>Shop Item - Start Bootstrap Template</title>
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="css/shop-item.css" rel="stylesheet">
+
     <script>
+
         $(document).ready(function () {
             $('.story-small').each(function () {
                 var maxWidth = 300; // Max width for the image
-                var maxHeight = 300;    // Max height for the image
+                var maxHeight = 150;    // Max height for the image
                 var ratio = 0;  // Used for aspect ratio
                 var width = $(this).width();    // Current image width
                 var height = $(this).height();  // Current image height
@@ -47,8 +48,22 @@
                 }
             });
         });
+
+        $("#imgSmall").click(function () {
+            $("#imgBig").attr("src", "http://www.freeimageslive.com/galleries/space/earth/pics/a17_h_148_22718.gif");
+            $("#overlay").show();
+            $("#overlayContent").show();
+        });
+
+        $("#imgBig").click(function () {
+            $("#imgBig").attr("src", "");
+            $("#overlay").hide();
+            $("#overlayContent").hide();
+        });
     </script>
+
 </head>
+
 @{
     AppDbContext db = new AppDbContext();
     var book = db.Books.Single(m => m.BookId == Model.Id);
@@ -65,19 +80,19 @@
             <div class="col-md-3">
                 <p class="lead">Kategorie</p>
                 <div class="list-group">
-                    <a href="#" class="list-group-item">Fantastyka</a>
-                    <a href="#" class="list-group-item">Sci Fi</a>
-                    <a href="#" class="list-group-item">Kryminały</a>
-                    <a href="#" class="list-group-item">Romanse</a>
-                    <a href="#" class="list-group-item">Dla dzieci</a>
-                    <a href="#" class="list-group-item">Horrory</a>
-                    <a href="#" class="list-group-item">Kuchnia</a>
-                    <a href="#" class="list-group-item">Biografie</a>
-                    <a href="#" class="list-group-item">Historyczne</a>
-                    <a href="#" class="list-group-item">Literatura poważna</a>
-                    <a href="#" class="list-group-item">Turystyka</a>
-                    <a href="#" class="list-group-item">Dramat</a>
-                    <a href="#" class="list-group-item">Sensacyjne</a>
+                    <a href="#" class="list-group-item category">Fantastyka</a>
+                    <a href="#" class="list-group-item category">Sci Fi</a>
+                    <a href="#" class="list-group-item category">Kryminały</a>
+                    <a href="#" class="list-group-item category">Romanse</a>
+                    <a href="#" class="list-group-item category">Dla dzieci</a>
+                    <a href="#" class="list-group-item category">Horrory</a>
+                    <a href="#" class="list-group-item category">Kuchnia</a>
+                    <a href="#" class="list-group-item category">Biografie</a>
+                    <a href="#" class="list-group-item category">Historyczne</a>
+                    <a href="#" class="list-group-item category">Literatura poważna</a>
+                    <a href="#" class="list-group-item category">Turystyka</a>
+                    <a href="#" class="list-group-item category">Dramat</a>
+                    <a href="#" class="list-group-item category">Sensacyjne</a>
                 </div>
             </div>
             <div class="col-md-9">
@@ -89,21 +104,25 @@
                         if (Model.BookImages.Count() == 0)
                         {
                             <li>
-                                <img src="~/Images/noFoto.png">
-                                <a href="~/Images/noFoto.png" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
+                                <img src="~/Images/noFoto.png" class="story-small">
+                                <a href="" title="@Model.Author - @Model.Title">   </a>
                             </li>
                         }
                         foreach (string img in @Model.BookImages)
                         {
                             <li>
-                                <img src="@img">
-                                <a href="chuj" title="@Model.Author - @Model.Title" rel="lightbox">   </a>
+                                <a href="@img" title="@Model.Author - @Model.Title" rel="lightbox" id="img-hoover" style="color:red; background-color:red"></a>
+                                <img src="@img"/>
                             </li>
                             k++;
 
                         }
                     }
                 </ul>
+                <div id="overlay"></div>
+                <div id="overlayContent">
+                    <img id="imgBig" src="" alt="" width="400" />
+                </div>
                 <div class="col-md-9">
                     <hr>
                     <div class="col-md-9">
@@ -230,10 +249,6 @@
         </div>
     </div>
 
-    <!-- jQuery -->
-                            <script src="js/jquery.js"></script>
-    <!-- Bootstrap Core JavaScript -->
-                            <script src="js/bootstrap.min.js"></script>
                             <script>
                                 $(document).ready(function () {
                                     $('.pgwSlider').pgwSlider();

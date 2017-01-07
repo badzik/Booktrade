@@ -20,6 +20,7 @@
             <tr>
                 <th>Data dodania</th>
                 <th>Ocena</th>
+                <th>Otrzymany od:</th>
                 <th>Opis transakcji</th>
                 <th> </th>
             </tr>
@@ -47,7 +48,9 @@
                                 <span class="glyphicon glyphicon-star" style="color:@color" aria-hidden="true"></span>
                             }
                         } (@comment.Rating)
-
+                    </td>
+                    <td>
+                        <a href='@Url.Action("Usr", "Home", new { userId = comment.Sender.Id})'>@comment.Sender.Name</a>
                     </td>
                     <td>@comment.Description</td>
                 </tr>

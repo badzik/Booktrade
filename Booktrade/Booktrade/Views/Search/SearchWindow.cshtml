@@ -144,7 +144,8 @@ new { @class = "form-control" })
                                         }
                                         <tr class="clickable-row" id="clicable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })">
 
-                                            <td><img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';" style="width:50px; height:50px" />  @book.Author - @book.Title</td>
+                                            <td><img class="displayed" onError="this.onerror = null; this.src = '/Images/noFoto.png';" src="@imageSrc"
+     width="50" height="50" onmouseover="this.src='@imageSrc';this.width=200;this.height=200;" onmouseout="this.width=50;this.height=50" />  @book.Author - @book.Title</td>
                                             <td>@book.Genre</td>
                                             @{
                                                 string price = "";

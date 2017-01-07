@@ -16,7 +16,7 @@
             transitionEffect : 'fading',
             autoSlide : false,
             displayList : true,
-            displayControls : true,
+            displayControls : false,
             touchControls : true,
             verticalCentering : true,
             adaptiveHeight : false,
@@ -277,7 +277,7 @@
                 }
 
                 if (element.link) {
-                    currentElement.html('<a href="' + element.link + '"' + (element.linkTarget ? ' target="' + element.linkTarget + '"' : '') + 'rel="lightbox"' + '>' + currentElement.html() + '</a>');
+                    currentElement.html('<div id="textDiv"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></div><a href="' + element.link + '"' + (element.linkTarget ? ' target="' + element.linkTarget + '"' : '') + 'rel="lightbox"' + '>' + currentElement.html() + "tre" + '</a>');
                 }
 
                 pgwSlider.plugin.find('.ps-current > ul').append(currentElement);

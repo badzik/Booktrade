@@ -18,7 +18,7 @@
         }
     </style>
 </head>
-@if (Model != null)
+@if (Model.Where(m => m.isSold == false && m.isChanged == false).Count() !=0)
 {
     <legend></legend>
     <div class="container">
@@ -44,7 +44,8 @@
                             imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
                         }
                     <tr id="clicable-row">
-                        <td class="clickable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })"><img src="@imageSrc " onError="this.onerror = null; this.src = '/Images/noFoto.png';" style="width:50px; height:50px" />  @book.AddDate</td>
+                        <td class="clickable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })"><img class="displayed" onError="this.onerror = null; this.src = '/Images/noFoto.png';" src="@imageSrc"
+     width="50" height="50" onmouseover="this.src='@imageSrc';this.width=200;this.height=200;" onmouseout="this.width=50;this.height=50" /> @book.AddDate</td>
                         <td class="clickable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })">@book.Author - @book.Title</td>
                         <td class="clickable-row" data-href="@Url.Action("Book", "Home", new { bookId = book.BookId })">@book.Price zł.</td>
                         <td>
@@ -62,7 +63,8 @@
 }
 else
 {
-    <h2>Obecnie nic nie sprzedajesz ;( )</h2>
+    <hr />
+    <h2>Obecnie nic nie sprzedajesz ;( </h2>
 }
 <form action="/MyAccount/AddBook">
     <input class="btn btn-default" type="submit" value="Dodaj książkę" />

@@ -176,6 +176,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\lightbox.css" />
+    <Content Include="Content\lightbox.min.css" />
     <Content Include="Content\pgwslider.css" />
     <Content Include="Content\pgwslider.min.css" />
     <Content Include="Content\shop-homepage.css" />
@@ -247,6 +248,12 @@
     <Content Include="scripts\SearchScript.js" />
     <Content Include="scripts\showImage.js" />
     <Content Include="scripts\starRating.js" />
+    <Content Include="Images\close.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\loading.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -334,7 +341,7 @@
     <Content Include="Views\Home\Book.cshtml" />
     <Content Include="Views\Home\Usr.cshtml" />
     <Content Include="Views\Home\_MyBooks.cshtml" />
-    <Content Include="Views\Home\MyComents.cshtml" />
+    <Content Include="Views\Home\_MyComents.cshtml" />
     <Content Include="Views\Transaction\Transactions.cshtml" />
     <Content Include="Views\Transaction\PayCard.cshtml" />
     <Content Include="Views\Transaction\ExchangeCard.cshtml" />

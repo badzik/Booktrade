@@ -1,6 +1,6 @@
-// If you would like to use a custom loading image or close button reference them in the next two lines.
-var loadingImage = 'loading.gif';		
-var closeButton = 'close.gif';		
+﻿// If you would like to use a custom loading image or close button reference them in the next two lines.
+var loadingImage = '/Images/loading.gif';
+var closeButton = '/Images/close.gif';
 
 function getPageScroll(){
 
@@ -254,7 +254,7 @@ function initLightbox()
 	// create link
 	var objLink = document.createElement("a");
 	objLink.setAttribute('href','#');
-	objLink.setAttribute('title','Zamknij poprzez klikniecie');
+	objLink.setAttribute('title','Zamknij poprzez kliknięcie');
 	objLink.onclick = function () {hideLightbox(); return false;}
 	objLightbox.appendChild(objLink);
 

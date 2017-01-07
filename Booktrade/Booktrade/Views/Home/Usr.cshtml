@@ -35,7 +35,7 @@
                     <p>@Model.City, @Model.Province</p>
                 </div>
             </div>
-
+            <p><a href='@Url.Action("NewMessage", "Message", new { receiverId = Model.userId})' type="button" class="btn btn-default btn-block">Wyślij wiadomość</a></p>
             @{
                 string activeBooks = "";
                 string activeBooksHeader = "btn btn-default";
@@ -51,7 +51,7 @@
                 {
                     activeStatic = "active";
                     activeStaticHeader = "btn btn-primary";
-                } // w ten sam sposób komentarze powinny być robione
+                }
             }
 
             <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">
@@ -85,7 +85,6 @@
                         average = (average + 0.0f) / Model.ReceivedComments.Count;
                         double halfstar = average - Math.Floor(average);
                     }
-
                     <div class="tab-pane fade in @activeStatic" id="tab1">
                         <h3>Ilość otrzymanych komentarzy: @Model.ReceivedComments.Count</h3>
                         <h3>
@@ -116,7 +115,8 @@
                                 }
                             }
                         </h3>
-                        <h3>Ilość książek w sprzedaży: @Model.AllBooks.Count</h3>
+                        <h3>Ilość książek w sprzedaży: @Model.AllBooks.Where(m => m.isSold == false && m.isChanged ==false).Count()</h3>
+                        <h3>Wszystkie sprzedane książki: @Model.AllBooks.Where(m => m.isSold == true || m.isChanged == true).Count()</h3>
 
                     </div>
                     <div class="tab-pane fade in @activeBooks" id="tab2">
@@ -152,7 +152,7 @@
                         <div class="col-sm-2 col-sm-2">
                             <button class="btn btn-default" type="submit"> Zmień </button>
                         </div>
-                        @Html.Partial("MyComents", Model.ReceivedComments)
+                        @Html.Partial("_MyComents", Model.ReceivedComments)
                         <div class="col-sm-offset-5 col-sm-2">
                             @if (Model.HowManyCommentsInOnePage < Model.AllComments.Count)
                             {
