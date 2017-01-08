@@ -30,7 +30,7 @@ namespace Booktrade.Controllers
             if (phrase != null && phrase!="")
             {
                 model.Phrase = phrase;
-                result = result.Where(x => x.Title.ToLower().Contains(phrase.ToLower()) || x.Author.ToLower().Contains(phrase.ToLower()) || x.Publisher.ToLower().Contains(phrase.ToLower())).ToList();
+                result = result.Where(x => x.Title.ToLower().Contains(phrase.ToLower()) || x.Author.ToLower().Contains(phrase.ToLower()) || (x.Publisher!=null ? x.Publisher.ToLower().Contains(phrase.ToLower()) : false)).ToList();
             }
             model.Results = result;
             model.ForSell = true;
@@ -88,7 +88,7 @@ namespace Booktrade.Controllers
             }
             if (model.Publisher!=null && model.Publisher != "")
             {
-                result = result.Where(x => x.Publisher.ToLower().Contains(model.Publisher)).ToList();
+                result = result.Where(x => x.Publisher != null ? x.Publisher.ToLower().Contains(model.Publisher) : false).ToList();
             }
             if (model.PublicationYear != 0)
             {
