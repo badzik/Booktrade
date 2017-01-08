@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Booktrade.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -43,6 +44,8 @@ namespace Booktrade.ViewModels
         public List<string> DeliveryName { get; set; }
         public Dictionary<string,float> DeliveryDict { get; set; }
         public DateTime? AddDate { get; set; }
+
         public float Average { get; set; }
+        public List<Book> OfferBooks { get; set; }
     }
 }

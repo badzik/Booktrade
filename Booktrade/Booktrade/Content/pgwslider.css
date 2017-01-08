@@ -46,7 +46,6 @@
         min-width: 100%;
         height: auto;
         position: relative;
-        background-color: red;
         display: block;
         transition: margin-top 250ms linear;
     }
@@ -55,10 +54,8 @@
             max-width: 100%;
             min-width: 100%;
             height: auto;
-            background-color: red;
             display: block;
             transition: margin-top 250ms linear;
-            color: red;
             opacity: 0.4;
         }
 

@@ -12,6 +12,7 @@
 
     <link href="~/Content/lightbox.css" rel="stylesheet">
     <link href="~/Content/pgwslider.css" rel="stylesheet">
+    <link href="~/Content/shop-homepage.css" rel="stylesheet">
     <script src="~/scripts/pgwslider.js"></script>
     <script src="~/scripts/lightbox.js"></script>
 
@@ -111,8 +112,8 @@
                         foreach (string img in @Model.BookImages)
                         {
                             <li>
-                                <a href="@img" title="@Model.Author - @Model.Title" rel="lightbox" id="img-hoover" style="color:red; background-color:red"></a>
-                                <img src="@img"/>
+                                <a href="@img" title="@Model.Author - @Model.Title" rel="lightbox" id="img-hoover"></a>
+                                <img src="@img" />
                             </li>
                             k++;
 
@@ -132,14 +133,13 @@
                         {
                             <p>Wydawca: @Model.Publisher</p>
                         }
-                        @if (@Model.Publisher != null)
+                        @if (@Model.PublicationDate.HasValue)
                         {
-                            <p>Data wydania: @Model.PublicationDate</p>
+                            <p>Data wydania: @Model.PublicationDate.Value.Year</p>
                         }
 
                     </div>
                     <div class="col-md-3">
-                        <p>@Model.PublicationDate</p>
                         <a href='@Url.Action("Usr", "Home", new { userId = Model.Seller.Id })'><p>Sprzedawca @Model.Seller.Name</p></a>
                         @{
                             string color = "red";
@@ -223,8 +223,75 @@
                     }
                 </div>
             </div>
+            <div class="col-lg-12">
+                @if (Model.OfferBooks.Count() != 0) { 
+                    @:<br />
+                    @:<br />
+                    @:<hr />
+                    @:<h3>Podobne książki wybrane dla Ciebie</h3>
+                    var model = Model.OfferBooks.Where(m => !(m.isChanged|| m.isSold) && m.BookId != book.BookId);
+                    foreach (var offerbook in model.Take(4))
+                    {
+                        model.Count();
+                        string imageSrc = "/Images/noFoto.png";
+                        if (offerbook.ImagesForBook.FirstOrDefault() != null)
+                        {
+                            var firstImage = offerbook.ImagesForBook.First();
+                            string imageBase64 = Convert.ToBase64String(firstImage.Image);
+                            imageSrc = string.Format("data:image/gif;base64,{0}", imageBase64);
+                        }
+                            <div class="col-sm-3 col-lg-3 col-md-3">
+                                <div class="thumbnail">
+                                    <div style="height:150px; position:center;  top:0;left: 0;">
+                                        <style>
+                                            div > img {
+                                                margin: 0 auto;
+                                                display: block;
+                                            }
+                                        </style>
+                                        <a href='@Url.Action("Book", "Home", new { bookId = offerbook.BookId })'>
+                                            <img src='@Url.Content(@imageSrc)' class="story-small" />
+                                        </a>
+                                    </div>
+
+
+                                    <div class="caption" style="width: 100%; word-wrap: break-word; position:relative;">
+                                        <div style="height:50px">
+                                            <h5>
+                                                <a href="@Url.Action("Book", "Home", new { bookId = offerbook.BookId })">@offerbook.Author - @offerbook.Title</a>
+                                            </h5>
+                                        </div>
+                                        @offerbook.Genre
+                                        @{
+                                            if (offerbook.Changeable == true)
+                                            {
+                                                <i class="fa fa-check-square" title="Możliwość wymiany" style="color:lightgreen"></i>
+                                            }
+                                        }
+                                        <div>
+                                            @if (offerbook.Changeable == false && offerbook.Price == 0)
+                                            {
+                                                <h4 class="pull-right">Za darmo</h4>
+                                            }
+                                            else if (offerbook.Changeable == true && offerbook.Price == 0)
+                                            {
+                                                <h4 class="pull-right">Tylko wymiana</h4>
+                                            }
+                                            else
+                                            {
+                                                <h4 class="pull-right">@offerbook.Price zł</h4>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    }
+                                            }
+            </div>
         </div>
     </div>
+
+
 
     <div class="modal fade" id="buyModal">
         <div class="modal-dialog" role="document">
@@ -249,17 +316,17 @@
         </div>
     </div>
 
-                            <script>
-                                $(document).ready(function () {
-                                    $('.pgwSlider').pgwSlider();
-                                });
-                                $('.open-buyDialog').click(function (e) {
-                                    var bookId = $(this).data('id');
-                                    var link = "/Transaction/BuyNow?bookId=" + bookId;
-                                    $("#buyLink").attr("href", link);
-                                });
+        <script>
+            $(document).ready(function () {
+                $('.pgwSlider').pgwSlider();
+            });
+            $('.open-buyDialog').click(function (e) {
+                var bookId = $(this).data('id');
+                var link = "/Transaction/BuyNow?bookId=" + bookId;
+                $("#buyLink").attr("href", link);
+            });
 
-                            </script>
+        </script>
 
-                            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
-                            }
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+                                            }

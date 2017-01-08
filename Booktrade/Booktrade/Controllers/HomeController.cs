@@ -75,6 +75,37 @@ namespace Booktrade.Controllers
             {
                 average += c.Rating;
             }
+            List<Book> offerBooks = new List<Book>();
+            var set = new HashSet<Book>();
+            var  offers = context.Books.Where(m => m.Genre == book.Genre && (!(m.isChanged || m.isSold) && m.BookId != book.BookId));
+            offerBooks.AddRange(offers);
+            if (offers.Count() <= 4)
+            {
+                offers = context.Books.Where(m => m.Seller.Province == book.Seller.Province && (!(m.isChanged || m.isSold) && m.BookId != book.BookId));
+                offerBooks.AddRange(offers);
+                set = new HashSet<Models.Book>(offers);
+                offerBooks = set.ToList();
+                var count = offerBooks.Count();
+                if (offerBooks.Count() <= 4)
+                {
+                    offers = context.Books.Where(m => m.Author == book.Author && (!(m.isChanged || m.isSold) && m.BookId != book.BookId));
+                    offerBooks.AddRange(offers);
+                    set = new HashSet<Models.Book>(offers);
+                    offerBooks = set.ToList();
+                    count = offerBooks.Count();
+                    if (offerBooks.Count() <= 4)
+                    {
+                        offers = context.Books.Where(m => m.Title == book.Title && (!(m.isChanged || m.isSold) && m.BookId != book.BookId));
+                        offerBooks.AddRange(offers);
+                        set = new HashSet<Models.Book>(offers);
+                        offerBooks = set.ToList();
+                    }
+                }
+            }
+            else
+            {
+                offerBooks.OrderBy(m => m.Seller.Province == book.Seller.Province);
+            }
             average = (average + 0.0f) / myAllComments.Count();
             var bookView = new EditBookModel
             {
@@ -92,7 +123,8 @@ namespace Booktrade.Controllers
                 DeliveryName = deliveryNames,
                 DeliveryPrice = deliveryPrices,
                 Average = average,
-                AddDate = book.AddDate
+                AddDate = book.AddDate,
+                OfferBooks = offerBooks
             };
 
 
@@ -199,7 +231,7 @@ namespace Booktrade.Controllers
                 AllBooks = myAllBooks,
                 AllComments = myAllComments,
                 HowManyCommentsInOnePage = lC,
-                userId = userId              
+                userId = userId     
             };
             return View(uvm);
         }
