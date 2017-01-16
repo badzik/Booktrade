@@ -59,7 +59,7 @@ namespace Booktrade.Controllers
             {
                 return View();
             }
-
+            
             var user = await userManager.FindAsync(model.Email, model.Password);
 
             if (user != null)

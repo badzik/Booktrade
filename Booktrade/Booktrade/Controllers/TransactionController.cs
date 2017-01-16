@@ -77,8 +77,7 @@ namespace Booktrade.Controllers
                 }
 
             }
-            //TODO: Return to book view after sending a propostion
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Book", "Home", new { bookId = bookId });
         }
 
         private PropositionModel GetPropositionModel(string bookId)

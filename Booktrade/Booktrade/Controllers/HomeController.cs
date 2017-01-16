@@ -83,21 +83,21 @@ namespace Booktrade.Controllers
             {
                 offers = context.Books.Where(m => m.Seller.Province == book.Seller.Province && (!(m.isChanged || m.isSold) && m.BookId != book.BookId));
                 offerBooks.AddRange(offers);
-                set = new HashSet<Models.Book>(offers);
+                set = new HashSet<Models.Book>(offerBooks);
                 offerBooks = set.ToList();
                 var count = offerBooks.Count();
                 if (offerBooks.Count() <= 4)
                 {
                     offers = context.Books.Where(m => m.Author == book.Author && (!(m.isChanged || m.isSold) && m.BookId != book.BookId));
                     offerBooks.AddRange(offers);
-                    set = new HashSet<Models.Book>(offers);
+                    set = new HashSet<Models.Book>(offerBooks);
                     offerBooks = set.ToList();
                     count = offerBooks.Count();
                     if (offerBooks.Count() <= 4)
                     {
                         offers = context.Books.Where(m => m.Title == book.Title && (!(m.isChanged || m.isSold) && m.BookId != book.BookId));
                         offerBooks.AddRange(offers);
-                        set = new HashSet<Models.Book>(offers);
+                        set = new HashSet<Models.Book>(offerBooks);
                         offerBooks = set.ToList();
                     }
                 }

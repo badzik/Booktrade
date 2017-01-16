@@ -53,8 +53,6 @@ namespace Booktrade.Controllers
                 return RedirectToAction("Information", "Info", new { text = "MessageSendFail" });
             }
             string receiverId = Request.QueryString["receiverId"];
-            //TODO: Return to book view after sending a message
-            //string bookId= Request.QueryString["bookId"];
             var context = new AppDbContext();
             Message message = new Message()
             {

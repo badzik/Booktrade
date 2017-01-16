@@ -14,7 +14,7 @@ namespace Booktrade
 
         public void Configuration(IAppBuilder app)
         {
-            // this is the same as before
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
