@@ -1,19 +1,16 @@
 ﻿using Booktrade.ViewModels;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.DataProtection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System;
-using System.Linq;
-using System.Text;
-using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Net;
-using System.Diagnostics;
+using Facebook;
+using Newtonsoft.Json;
+using System;
+using System.Web.Security;
 
 namespace Booktrade.Controllers
 {
@@ -59,7 +56,7 @@ namespace Booktrade.Controllers
             {
                 return View();
             }
-            
+
             var user = await userManager.FindAsync(model.Email, model.Password);
 
             if (user != null)
@@ -181,7 +178,7 @@ namespace Booktrade.Controllers
             if (user != null)
             {
                 var code = await userManager.GeneratePasswordResetTokenAsync(user.Id);
-                code= HttpUtility.UrlEncode(code);
+                code = HttpUtility.UrlEncode(code);
                 string link = "localhost:41655\\auth\\passwordChangeRecovery?token=" + code + "&id=" + user.Id;
                 var fromAddress = new MailAddress("adm1n_b00ktrade@outlook.com", "Booktrade");
                 var toAddress = new MailAddress(user.Email, user.Name);
@@ -203,7 +200,7 @@ namespace Booktrade.Controllers
                 {
                     Subject = subject,
                     Body = body
-                })  
+                })
                 {
                     message.IsBodyHtml = true;
                     smtp.Send(message);
@@ -238,7 +235,7 @@ namespace Booktrade.Controllers
                 ModelState.AddModelError("", "Podane hasła nie są takie same");
                 return View();
             }
-            if(id!=null && token != null)
+            if (id != null && token != null)
             {
                 IdentityResult result = userManager.ResetPassword(id, token, password1);
                 if (result.Succeeded)
@@ -249,12 +246,139 @@ namespace Booktrade.Controllers
                 {
                     return RedirectToAction("Information", "Info", new { text = "PasswordChangeFailed" });
                 }
-            }else
+            }
+            else
             {
                 return RedirectToAction("Information", "Info", new { text = "AccessDenied" });
             }
 
-            
+
+        }
+
+        private Uri RediredUri
+        {
+            get
+            {
+                var uriBuilder = new UriBuilder(Request.Url);
+                uriBuilder.Query = null;
+                uriBuilder.Fragment = null;
+                uriBuilder.Path = Url.Action("facebookCallBack");
+                return uriBuilder.Uri;
+            }
+        }
+        [AllowAnonymous]
+        public ActionResult Facebook()
+        {
+            var fb = new FacebookClient();
+            var loginUrl = fb.GetLoginUrl(new
+            {
+                client_id = "264620673990463",
+                client_secret = "416afd5fa57caf031978b354eb67c902",
+                redirect_uri = RediredUri.AbsoluteUri,
+                response_type = "code",
+                scope = "email"
+            });
+            return Redirect(loginUrl.AbsoluteUri);
+        }
+
+        public async Task<ActionResult> FacebookCallBack(string code, LogInModel model)
+        {
+            var fb = new FacebookClient();
+            RegisterModel registerModel = null;
+            dynamic result = fb.Post("oauth/access_token", new
+            {
+                client_id = "264620673990463",
+                client_secret = "416afd5fa57caf031978b354eb67c902",
+                redirect_uri = RediredUri.AbsoluteUri,
+                code = code
+            });
+            var accessToken = result.access_token;
+            Session["AccessToken"] = accessToken;
+            fb.AccessToken = accessToken;
+            dynamic me = fb.Get("me?fields=link,first_name,currency,last_name,email,gender,location,locale,timezone,verified,picture,age_range");
+            string email = me.email;
+            AppUser user = userManager.FindByEmail(email);
+            if (user != null)
+            {
+                var identity = await userManager.CreateIdentityAsync(
+    user, DefaultAuthenticationTypes.ApplicationCookie);
+                GetAuthenticationManager().SignIn(identity);
+                return Redirect(GetRedirectUrl(model.ReturnUrl));
+            }
+            else
+            {
+                registerModel = new RegisterModel
+                {
+                    Email = me.email,
+                    Name = me.first_name,
+                    Surname = me.last_name,
+                    //City = me.location.name
+                };
+                //TempData["email"] = me.email;
+                //TempData["first_name"] = me.first_name;
+                //TempData["lastname"] = me.last_name;
+                //TempData["picture"] = me.picture.data.url;
+                return RedirectToAction("ExternalRegistration", "Auth", registerModel);
+            }
+            //FormsAuthentication.SetAuthCookie(email, false);
+        }
+
+        [HttpGet]
+        public ActionResult ExternalRegistration(RegisterModel model)
+        {
+            return View(model);
+        }
+        [ActionName("Registration")]
+        [HttpPost]
+        public async Task<ActionResult> ExternalRegistrationPost(RegisterModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = new AppUser
+            {
+                UserName = model.Email,
+                Address = model.Address,
+                Email = model.Email,
+                Name = model.Name,
+                Surname = model.Surname,
+                Province = model.Province,
+                PostalCode = model.PostalCode,
+                BankNumber = "Nie podano",
+                City = model.City
+            };
+
+            //random password
+            Guid g = Guid.NewGuid();
+            string guidString = Convert.ToBase64String(g.ToByteArray());
+            guidString = guidString.Replace("=", "");
+            guidString = guidString.Replace("+", "");
+            var result = await userManager.CreateAsync(user, guidString);
+
+            if (result.Succeeded)
+            {
+                await SignIn(user);
+                return RedirectToAction("index", "home");
+            }
+
+            string temp;
+            Regex regex = new Regex(@"Name .* is already taken.");
+            foreach (var error in result.Errors)
+            {
+                temp = error;
+                if (error == "Passwords must be at least 6 characters.")
+                {
+                    temp = "Hasło musi zawierać przynajmniej 6 znaków.";
+                }
+                if (regex.Match(error).Success)
+                {
+                    temp = "Istnieje konto dla podanego adresu email.";
+                }
+                ModelState.AddModelError("", temp);
+            }
+            return View();
         }
     }
 }

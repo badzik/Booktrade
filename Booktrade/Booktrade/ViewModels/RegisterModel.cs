@@ -12,7 +12,7 @@ namespace Booktrade.ViewModels
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [Required]
+        //[Required] test do facebooka
         [Display(Name = "Hasło")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
