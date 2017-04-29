@@ -61,12 +61,21 @@ namespace Booktrade.Controllers
 
             if (user != null)
             {
-                var identity = await userManager.CreateIdentityAsync(
-                    user, DefaultAuthenticationTypes.ApplicationCookie);
+                if (!user.EmailConfirmed)
+                {
+                    ModelState.AddModelError("", "Konto nie zostało jeszcze zweryfikowane.");
+                    return View();
+                }
+                else
+                {
+                    var identity = await userManager.CreateIdentityAsync(
+user, DefaultAuthenticationTypes.ApplicationCookie);
 
-                GetAuthenticationManager().SignIn(identity);
+                    GetAuthenticationManager().SignIn(identity);
 
-                return Redirect(GetRedirectUrl(model.ReturnUrl));
+                    return Redirect(GetRedirectUrl(model.ReturnUrl));
+                }
+
             }
 
             // user authN failed
@@ -106,8 +115,36 @@ namespace Booktrade.Controllers
 
             if (result.Succeeded)
             {
-                await SignIn(user);
-                return RedirectToAction("index", "home");
+                var code = await userManager.GenerateEmailConfirmationTokenAsync(userManager.FindByEmail(user.Email).Id);
+                code = HttpUtility.UrlEncode(code);
+                string link = "localhost:41655\\auth\\registrationConfirm?token=" + code + "&id=" + user.Id;
+                var fromAddress = new MailAddress("adm1n_b00ktrade@outlook.com", "Booktrade");
+                var toAddress = new MailAddress(user.Email, user.Name);
+                const string fromPassword = "Website007!";
+                const string subject = "Potwierdzenie rejestracji - booktrade";
+                string body = "Witaj " + user.Name + ",</br> Założono nowe konto na serwisie Booktrade.</br></br>"
+                    + "Aby aktywować konto, odwiedź poniższą stronę:</br>" + "<a>" + link + "</a>";
+
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp-mail.outlook.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                })
+                {
+                    message.IsBodyHtml = true;
+                    smtp.Send(message);
+                }
+
+                return RedirectToAction("Information", "Info", new { text = "RegisterConfirm" });
             }
 
             string temp;
@@ -219,6 +256,22 @@ namespace Booktrade.Controllers
         public ActionResult PasswordChangeRecovery()
         {
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult RegistrationConfirm()
+        {
+            string token = Request.QueryString["token"];
+            string id = Request.QueryString["id"];
+            IdentityResult result = userManager.ConfirmEmail(id, token);
+            if(result.Succeeded)
+            {
+                return RedirectToAction("Information", "Info", new { text = "AccountActivated" });
+            }
+            else
+            {
+                return RedirectToAction("Information", "Info", new { text = "Error" });
+            }
         }
 
         [HttpPost]
@@ -347,7 +400,8 @@ namespace Booktrade.Controllers
                 Province = model.Province,
                 PostalCode = model.PostalCode,
                 BankNumber = "Nie podano",
-                City = model.City
+                City = model.City,
+                EmailConfirmed = true
             };
 
             //random password

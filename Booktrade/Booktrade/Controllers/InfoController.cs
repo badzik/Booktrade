@@ -50,6 +50,14 @@ namespace Booktrade.Controllers
             {
                 temp = "Kupno książki przebiegło pomyślnie";    
             }
+            if(text=="RegisterConfirm")
+            {
+                temp = "Na podany adres e-mail została wysłana wiadomość aktywacyjna.";
+            }
+            if(text=="AccountActivated")
+            {
+                temp = "Konto zostało aktywowane. Można teraz się zalogować.";
+            }
             return View((object)temp);
         }
     }
