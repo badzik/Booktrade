@@ -42,23 +42,40 @@
                 @{
                     if (User.Identity.IsAuthenticated)
                     {
-                        ConversationPreviewsModel model=MessageController.GetConversationPreviews();
-                        bool unreadMessage = false;
-                        foreach(ConversationPreviewModel m in model.Conversations)
-                        {
-                            if (m.LastMessage.Receiver.Id == CurrentUser.Identity.GetUserId() && !m.LastMessage.isRead)
-                            {
-                                unreadMessage = true;
-                            }
-                        }
+                        int unreadMessages = MessageController.CountUnreadMessages();
+                        int propositions = TransactionController.CountReceivedPropositions();
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> @CurrentUser.Username<b class="caret"></b></a>
+                            @{if (unreadMessages != 0 || propositions != 0)
+                                {
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-exclamation-circle" style="color:red"></i> @CurrentUser.Username<b class="caret"></b></a>
+                                }
+                                else
+                                {
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> @CurrentUser.Username<b class="caret"></b></a>
+                                }
+                            }
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="@Url.Action("messages", "message")"><i class="fa fa-fw fa-envelope" @{if (unreadMessage) { <text>style="color:red"</text>} } ></i> Wiadomości</a>
+                                    @{if (unreadMessages != 0)
+                                        {
+                                            <a href="@Url.Action("messages", "message")"><i class="fa fa-fw fa-envelope" style="color:red"></i> Wiadomości(@unreadMessages)</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("messages", "message")"><i class="fa fa-fw fa-envelope"></i> Wiadomości</a>
+                                        }
+                                    }
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("propositions", "transaction")"><i class="fa fa-fw fa-money"></i> Propozycje</a>
+                                    @{if (propositions != 0)
+                                        {
+                                            <a href="@Url.Action("propositions", "transaction")"><i class="fa fa-fw fa-money" style="color:red"></i> Propozycje(@propositions)</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("propositions", "transaction")"><i class="fa fa-fw fa-money"></i> Propozycje</a>
+                                        }
+                                    }
                                 </li>
                                 <li>
                                     <a href="@Url.Action("mybooks", "myaccount")"><i class="fa fa-fw fa-book"></i> Moje książki</a>
@@ -76,12 +93,12 @@
                             </ul>
                         </li>
                         <li><a href="@Url.Action("logout", "auth")"><span class="glyphicon glyphicon-log-in"></span> Wyloguj się</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="@Url.Action("register", "auth")"><span class="glyphicon glyphicon-user"></span><b> Załóż konto</b></a></li>
-                        <li> <a href="@Url.Action("login", "auth")"><span class="glyphicon glyphicon-log-in"></span> Zaloguj się</a></li>
-                    }
+                                        }
+                                        else
+                                        {
+                                            <li><a href="@Url.Action("register", "auth")"><span class="glyphicon glyphicon-user"></span><b> Załóż konto</b></a></li>
+                                            <li> <a href="@Url.Action("login", "auth")"><span class="glyphicon glyphicon-log-in"></span> Zaloguj się</a></li>
+                                        }
                 }
 
             </ul>
@@ -89,14 +106,14 @@
                 <div class="col-sm-3 col-md-3">
                     @if (!(ViewContext.RouteData.Values["Controller"].ToString() == "Search"))
                     {
-                    <form class="navbar-form" role="search">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Szukaj" id="searchInput">
-                            <div class="input-group-btn">
-                                <button id="searchButton" class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        <form class="navbar-form" role="search">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Szukaj" id="searchInput">
+                                <div class="input-group-btn">
+                                    <button id="searchButton" class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
                     }
                 </div>
                 @{
@@ -142,7 +159,7 @@
 </script>
 <script>
     $("#searchButton").click(function () {
-        window.location = "http://localhost:41655/Search/SearchWindow?phrase="+$("#searchInput").val();
+        window.location = "http://localhost:41655/Search/SearchWindow?phrase=" + $("#searchInput").val();
         return false;
     });
 

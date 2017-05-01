@@ -176,5 +176,19 @@ namespace Booktrade.Controllers
             }
             return text;
         }
+
+        public static int CountUnreadMessages()
+        {
+            ConversationPreviewsModel model = MessageController.GetConversationPreviews();
+            int unreadMessages = 0;
+            foreach (ConversationPreviewModel m in model.Conversations)
+            {
+                if (m.LastMessage.Receiver.Id == System.Web.HttpContext.Current.User.Identity.GetUserId() && !m.LastMessage.isRead)
+                {
+                    unreadMessages++;
+                }
+            }
+            return unreadMessages;
+        }
     }
 }

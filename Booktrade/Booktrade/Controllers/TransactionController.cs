@@ -174,7 +174,7 @@ namespace Booktrade.Controllers
                     ExMessage = eMessage,
                     SelectedDelivery = null,
                     DeliveryId = null
-                   
+
                 };
                 context.Transactions.Add(transaction);
                 context.SaveChanges();
@@ -342,7 +342,7 @@ namespace Booktrade.Controllers
         [HttpGet]
         public ActionResult BuyNow(int bookId, string error)
         {
-            if(error == "error")
+            if (error == "error")
             {
                 ModelState.AddModelError("", "Proszę wybrać opcję dostawy");
             }
@@ -356,7 +356,7 @@ namespace Booktrade.Controllers
             book.BuyerId = currentUser.Id;
             book.Buyer = currentUser;
             book.isSold = true;
-            
+
             Transaction model = new Transaction
             {
                 Seller = book.Seller,
@@ -368,7 +368,7 @@ namespace Booktrade.Controllers
         }
 
         [HttpPost]
-        public ActionResult BuyNow(string delivery,int bookId)
+        public ActionResult BuyNow(string delivery, int bookId)
         {
 
 
@@ -382,7 +382,7 @@ namespace Booktrade.Controllers
             var context = new AppDbContext();
             AppUser currentUser = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId());
             var book = context.Books.SingleOrDefault(m => m.BookId == bookId);
-            
+
             book.BuyerId = currentUser.Id;
             book.Buyer = currentUser;
             book.isSold = true;
@@ -391,13 +391,13 @@ namespace Booktrade.Controllers
             var deliveryforbook = context.DeliveryOptions.Where(m => m.DeliveryPriceId == bookId);
             var tab = delivery.Split(',');
             Debug.WriteLine("Test");
-            
+
             var name = tab[1];
             Debug.WriteLine(name);
             var thisDelivery = deliveryforbook.SingleOrDefault(m => m.Name == name);
 
             var exMessage = context.ExchangeMessages.Where(m => m.BookId == bookId);
-            if(exMessage.Count() != 0)
+            if (exMessage.Count() != 0)
             {
                 context.ExchangeMessages.RemoveRange(exMessage);
                 context.SaveChanges();
@@ -421,6 +421,15 @@ namespace Booktrade.Controllers
             context.Transactions.Add(model);
             context.SaveChanges();
             return RedirectToAction("Information", "Info", new { text = "bought" });
+        }
+
+
+        public static int CountReceivedPropositions()
+        {
+            int receivedPropositions = 0;
+            var context = new AppDbContext();
+            receivedPropositions = context.Users.Find(System.Web.HttpContext.Current.User.Identity.GetUserId()).ReceivedExchangeMessages.Where(x => x.Accepted == false).Count();
+            return receivedPropositions;
         }
     }
 }
