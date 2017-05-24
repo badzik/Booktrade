@@ -6,9 +6,10 @@
 <head>
     <style>
         .form-group > * {
-            margin-bottom:10px;
+            margin-bottom: 10px;
         }
     </style>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 @using (Html.BeginForm())
 {
@@ -28,6 +29,13 @@
                     <div class="col-sm-7 col-lg-9">
                         @Html.TextBoxFor(m => m.Password,
                         new { @class = "form-control", placeholder = "Hasło", required = "required", Type = "password" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ConfirmPassword" class="col-sm-5 col-lg-3 control-label" style="padding-right:0px">Potwierdź hasło</label>
+                    <div class="col-sm-7 col-lg-9">
+                        @Html.TextBoxFor(m => m.ConfirmPassword,
+                        new { @class = "form-control", placeholder = "Potwierdź hasło", required = "required", Type = "password" })
                     </div>
                 </div>
                 <div class="form-group">
@@ -75,6 +83,11 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="col-lg-offset-3 col-sm-7 col-lg-9">
+                        <div class="g-recaptcha" data-sitekey="6LdzwCIUAAAAAJqzpX-Ee4I6LB0j5GY3axIybgfS"></div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="col-sm-offset-5 col-sm-2">
                         <button type="submit" class="btn btn-primary">Zarejestruj się</button>
                     </div>
@@ -85,3 +98,4 @@
 }
 
 @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+

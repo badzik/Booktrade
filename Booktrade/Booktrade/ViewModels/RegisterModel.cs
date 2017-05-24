@@ -16,5 +16,8 @@ namespace Booktrade.ViewModels
         [Display(Name = "Hasło")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Display(Name = "Potwierdź hasło")]
+        public string ConfirmPassword { get; set; }
     }
 }

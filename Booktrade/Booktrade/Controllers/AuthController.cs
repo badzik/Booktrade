@@ -11,6 +11,7 @@ using Facebook;
 using Newtonsoft.Json;
 using System;
 using System.Web.Security;
+using Newtonsoft.Json.Linq;
 
 namespace Booktrade.Controllers
 {
@@ -92,9 +93,23 @@ user, DefaultAuthenticationTypes.ApplicationCookie);
         [HttpPost]
         public async Task<ActionResult> Register(RegisterModel model)
         {
-            if (!ModelState.IsValid)
+            var response = Request["g-recaptcha-response"];
+            string secretKey = "6LdzwCIUAAAAAJ-kTiXEGnngKTtVJ0RDzJJ3fUQZ";
+            var client = new WebClient();
+            var res = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}",secretKey,response));
+            var obj = JObject.Parse(res);
+            var status = (bool)obj.SelectToken("success");
+            if (!status)
             {
-                return View();
+                ModelState.AddModelError("", "Najpierw udowodnij, że nie jesteś robotem.");
+            }
+            if(status && !model.Password.Equals(model.ConfirmPassword))
+            {
+                ModelState.AddModelError("", "Podane hasła się nie zgadzają");
+            }
+            if (!ModelState.IsValid || !status)
+            {
+                return View(model);
             }
 
             var user = new AppUser
