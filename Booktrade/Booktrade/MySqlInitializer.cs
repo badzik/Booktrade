@@ -14,6 +14,8 @@ namespace Booktrade
             {
                 // if database did not exist before - create it
                 context.Database.Create();
+                context.Database.ExecuteSqlCommand("ALTER TABLE books ADD FULLTEXT INDEX idxTitle(Title)");
+                context.Database.ExecuteSqlCommand("ALTER TABLE books ADD FULLTEXT INDEX idxAuthot(Author)"); 
             }
             else
             {

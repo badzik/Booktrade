@@ -183,6 +183,7 @@
     <Content Include="Content\lightbox.min.css" />
     <Content Include="Content\pgwslider.css" />
     <Content Include="Content\pgwslider.min.css" />
+    <Content Include="Content\SearchBox.css" />
     <Content Include="Content\shop-homepage.css" />
     <Content Include="Content\addImage.css" />
     <Content Include="Content\user.css" />
@@ -245,10 +246,12 @@
     <Content Include="scripts\jQuery.MultiFile.min.js" />
     <Content Include="scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="scripts\LayoutScript.js" />
     <Content Include="scripts\lightbox.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
     <Content Include="scripts\pgwslider.js" />
     <Content Include="scripts\pgwslider.min.js" />
+    <Content Include="scripts\QuickSearch.js" />
     <Content Include="scripts\SearchScript.js" />
     <Content Include="scripts\showImage.js" />
     <Content Include="scripts\starRating.js" />

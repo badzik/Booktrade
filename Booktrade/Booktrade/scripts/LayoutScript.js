@@ -1,0 +1,26 @@
+﻿$(document).ready(function () {
+    $("#searchButton").click(function () {
+        window.location = "http://localhost:41655/Search/SearchWindow?phrase=" + $("#searchInput").val();
+        return false;
+    });
+
+    $(".category").click(function () {
+        window.location = "http://localhost:41655/Search/SearchWindow?category=" + $(this).text();
+        return false;
+    });
+
+    var onResize = function () {
+        // apply dynamic padding at the top of the body according to the fixed navbar height
+        $("body").css("padding-top", $(".navbar-fixed-top").height());
+    };
+
+    // attach the function to the window resize event
+    $(window).resize(onResize);
+
+    // call it also when the page is ready after load or reload
+    $(function () {
+        onResize();
+    });
+})
+
+
