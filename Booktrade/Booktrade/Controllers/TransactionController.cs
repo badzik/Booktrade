@@ -178,6 +178,7 @@ namespace Booktrade.Controllers
                 };
                 context.Transactions.Add(transaction);
                 context.SaveChanges();
+                LuceneSearchIndexer.UpdateBooksIndex();
                 return RedirectToAction("Propositions", "Transaction");
             }
             else
@@ -420,6 +421,7 @@ namespace Booktrade.Controllers
             };
             context.Transactions.Add(model);
             context.SaveChanges();
+            LuceneSearchIndexer.UpdateBooksIndex();
             return RedirectToAction("Information", "Info", new { text = "bought" });
         }
 

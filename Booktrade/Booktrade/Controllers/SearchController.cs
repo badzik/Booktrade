@@ -1,10 +1,20 @@
 ﻿using Booktrade.Models;
 using Booktrade.ViewModels;
+using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Documents;
+using Lucene.Net.Index;
+using Lucene.Net.QueryParsers;
+using Lucene.Net.Search;
+using Lucene.Net.Store;
+using Lucene.Net.Util;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -135,12 +145,16 @@ namespace Booktrade.Controllers
         public JsonResult SearchByPhrase(string phrase)
         {
             var context = new AppDbContext();
-            List<Book> books = context.Books.SqlQuery("SELECT * FROM booktradetestdb.books WHERE MATCH(Title) AGAINST('*" + phrase + "*' IN BOOLEAN MODE) OR MATCH(Author) AGAINST('*" + phrase+"*' IN BOOLEAN MODE);").ToList();
-            //Searching records from list using LINQ query  
-            var result = (from N in books
-                            where N.isSold.Equals(false)
-                            select new { N.Title });
-            
+            var result = LuceneSearch.SearchBooks(phrase);
+
+            //OLD FULL-TEXT SEARCH
+            //List<Book> books = context.Books.SqlQuery("SELECT * FROM booktradetestdb.books WHERE MATCH(Title) AGAINST('*" + phrase + "*' IN BOOLEAN MODE) OR MATCH(Author) AGAINST('*" + phrase + "*' IN BOOLEAN MODE);").ToList();
+            ////Searching records from list using LINQ query  
+            //var result = (from N in books
+            //              where N.isSold.Equals(false)
+            //              select new { N.Title });
+
+
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

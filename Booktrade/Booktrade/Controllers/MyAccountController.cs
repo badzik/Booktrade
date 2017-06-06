@@ -248,7 +248,7 @@ namespace Booktrade.Controllers
                 //uploadedFile = ms.ToArray();
                 //model.BookImage.InputStream.Read(uploadedFile, 0, uploadedFile.Length);
             }
-
+            LuceneSearchIndexer.UpdateBooksIndex();
             return RedirectToAction("index", "home");
         }
 
@@ -535,7 +535,7 @@ namespace Booktrade.Controllers
                 int i = 0;
                 foreach (string image in Request.Files)
                 {
-                    HttpPostedFileBase hpf2 = Request.Files.Get(i); //to może nie zadziałac 
+                    HttpPostedFileBase hpf2 = Request.Files.Get(i); 
                     if (hpf2.InputStream.Length > 0)
                     {
                         Debug.WriteLine(image);
@@ -575,7 +575,7 @@ namespace Booktrade.Controllers
                 }
                 i++;
             }
-
+            LuceneSearchIndexer.UpdateBooksIndex();
             return RedirectToAction("index", "home");
         }
 
@@ -692,7 +692,7 @@ namespace Booktrade.Controllers
             var images = context.BookImages.Where(m => m.BookImgId == bookId);
             var delivery = context.DeliveryOptions.Where(m => m.DeliveryPriceId == bookId);
             var transaction =  context.Transactions.SingleOrDefault(m => m.BookId == bookId);
-            //context.Messages.Where(m => m.)
+
             var exchangeMessages = context.ExchangeMessages.Where(m => m.BookId == bookId);
 
             context.SaveChanges();
@@ -718,7 +718,7 @@ namespace Booktrade.Controllers
             context.SaveChanges();
             context.Books.Remove(book);
             context.SaveChanges();
-            
+            LuceneSearchIndexer.UpdateBooksIndex();
 
             return RedirectToAction("myBooks", "MyAccount");
         }

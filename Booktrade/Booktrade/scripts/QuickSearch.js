@@ -17,6 +17,7 @@
                 }
             })
         },
+        minLength: 2,
         messages: {
             noResults: "", results: function (resultsCount) { }
         }

@@ -38,7 +38,7 @@ namespace Booktrade
 
                 return usermanager;
             };
-
+            LuceneSearchIndexer.UpdateBooksIndex();
         }
     }
 }
